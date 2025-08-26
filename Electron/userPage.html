@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Mooha</title>
+  <link rel="stylesheet" href="./css/userPage.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Menu lateral -->
+    <aside class="sidebar">
+        <div class="logo-section">
+            <img src="./images/teste1.png" alt="Logo PróFuturo" class="logo-image">
+            <h2 class="logo">PróFuturo</h2>
+        </div>
+        <button class="btn-login">Login</button>
+        <nav>
+        <ul>
+          <li><a href="#">Usuários</a></li>
+          <li><a href="#">Permissões</a></li>
+          <li><a href="#">Configurações</a></li>
+          <li><a href="#">Relatórios</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- Conteúdo principal -->
+    <main class="main">
+      <header class="header">
+        <h2>Dashboard</h2>
+      </header>
+
+      <!-- Seção de registro -->
+      <section class="registration">
+        <h3>Registro</h3>
+        <form>
+          <input type="text" placeholder="Nome do usuário">
+          <input type="email" placeholder="E-mail">
+          <input type="text" placeholder="Permissão">
+          <button type="submit">Salvar</button>
+        </form>
+      </section>
+
+      <!-- Gestão de cursos -->
+      <section class="courses">
+        <h3>Gestão de Cursos</h3>
+        <div class="course-cards">
+          <div class="card">
+            <img src="https://via.placeholder.com/80" alt="Curso">
+            <h4>Título do Curso</h4>
+            <p>Descrição breve</p>
+          </div>
+          <div class="card">
+            <img src="https://via.placeholder.com/80" alt="Curso">
+            <h4>Outro Curso</h4>
+            <p>Descrição breve</p>
+          </div>
+          <div class="card">
+            <img src="https://via.placeholder.com/80" alt="Curso">
+            <h4>Mais um Curso</h4>
+            <p>Descrição breve</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboards -->
+      <section class="charts">
+        <h3>Gráficos</h3>
+        <div class="chart-box">
+          <p>📊 Aqui entraria um gráfico de linhas</p>
+        </div>
+        <div class="chart-box">
+          <p>📊 Aqui entraria um gráfico de barras</p>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
