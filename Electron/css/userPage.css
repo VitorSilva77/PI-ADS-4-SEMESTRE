@@ -42,6 +42,63 @@ body {
     text-align: center;
 }
 
+.itens {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    transition: background 0.3s;
+}
+
+.item a{
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+
+.item:hover {
+    background: rgb(255, 71, 20);
+}
+
+.item i {
+    width: 20px;
+    text-align: center;
+}
+
+
+.logout-button {
+    margin-top: auto;
+    color: white;
+    background:rgb(34, 34, 34);;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: background 0.3s;
+}
+
+.logout-button i {
+    width: 20px;
+    text-align: center;
+}
+
+.logout-button:hover {
+    background: rgb(255, 71, 20);
+}
+
 .logo {
     font-size: 22px;
     margin-bottom: 20px;
@@ -58,25 +115,6 @@ body {
     margin-bottom: 20px;
 }
 
-.sidebar nav ul {
-    list-style: none;
-}
-
-.sidebar nav ul li {
-    margin: 15px 0;
-}
-
-.sidebar nav ul li a {
-    text-decoration: none;
-    color: #ccc;
-    transition: 0.3s;
-}
-
-.sidebar nav ul li a:hover {
-    color: rgb(255, 71, 20);
-    transition: 0.3s all;
-}
-
 /* Área principal */
 .main {
     flex: 1;
@@ -89,6 +127,9 @@ body {
 }
 
 .registration {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
     background: white;
     padding: 15px;
     border-radius: 8px;
@@ -98,7 +139,8 @@ body {
 
 .registration form {
     display: flex;
-    gap: 10px;
+    flex-direction: row;
+    gap: 20px;
     flex-wrap: wrap;
 }
 
@@ -107,6 +149,15 @@ body {
     border: 1px solid #ddd;
     border-radius: 6px;
     flex: 1;
+}
+
+.registration select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    flex: 1;
+    background: white;
+    color: #333;
 }
 
 .registration button {
