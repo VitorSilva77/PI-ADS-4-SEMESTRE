@@ -1,91 +1,88 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-
+  <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="./css/fonts.css" rel="stylesheet">
     <link href="./css/media.css" rel="stylesheet">
     <link rel="stylesheet" href="./css/userPage.css">
-
-</head>
-<body>
-  <div class="container">
-    
-    <!-- Menu lateral -->
-    <aside class="sidebar">
-        <div class="logo-section">
-            <img src="./images/teste1.png" alt="Logo PróFuturo" class="logo-image">
-            <h2 class="logo">PróFuturo</h2>
-        </div>
-        
-        <div class="itens">
-            <a href="#" class="item"><i class="fa-solid fa-house"></i> Início</a>
-            <a href="#" class="item"><i class="fa-solid fa-user"></i> Perfil</a>
-            <a href="#" class="item"><i class="fa-solid fa-book"></i> Cursos</a>
-            <a href="#" class="item"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
-            <a href="#" class="item"><i class="fa-solid fa-gear"></i> Configurações</a>
-            <button class="logout-button"><i class="fa-solid fa-right-from-bracket"></i>Sair</button
-        </div>
-    </aside>
-
-    <!-- Conteúdo principal -->
-    <main class="main">
-      <header class="header">
-        <h2>Dashboard</h2>
-      </header>
-
-      <!-- Seção de registro -->
-      <section class="registration">
-        <h3>Registro</h3>
-        <form>
-          <input type="mumber" placeholder="Funcional">
-          <input type="password" placeholder="Senha">
-          <Select>
-            <option value="" disabled selected>Tipo de Usuário</option>
-            <option value="admin">Administrador</option>
-            <option value="instrutor">RH</option>
-            <option value="aluno">Instrutor</option>
-          </Select>
-          <button type="submit">Salvar</button>
-        </form>
-      </section>
-
-      <!-- Gestão de cursos -->
-      <section class="courses">
-        <h3>Gestão de Cursos</h3>
-        <div class="course-cards">
-          <div class="card">
-            <img src="https://via.placeholder.com/80" alt="Curso">
-            <h4>Título do Curso</h4>
-            <p>Descrição breve</p>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      
+      <!-- Menu lateral -->
+      <aside class="sidebar">
+          <div class="logo-section">
+              <img src="./images/teste1.png" alt="Logo PróFuturo" class="logo-image">
+              <h2 class="logo">PróFuturo</h2>
           </div>
-          <div class="card">
-            <img src="https://via.placeholder.com/80" alt="Curso">
-            <h4>Outro Curso</h4>
-            <p>Descrição breve</p>
+          
+          <div class="itens">
+              <a href="#" class="item"><i class="fa-solid fa-house"></i> Início</a>
+              <a href="#" class="item"><i class="fa-solid fa-user"></i> Perfil</a>
+              <a href="#" class="item"><i class="fa-solid fa-book"></i> Cursos</a>
+              <a href="#" class="item"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
+              <a href="#" class="item"><i class="fa-solid fa-gear"></i> Configurações</a>
+              <button class="logout-button"><i class="fa-solid fa-right-from-bracket"></i>Sair</button
           </div>
-          <div class="card">
-            <img src="https://via.placeholder.com/80" alt="Curso">
-            <h4>Mais um Curso</h4>
-            <p>Descrição breve</p>
-          </div>
-        </div>
-      </section>
+      </aside>
 
-      <!-- Dashboards -->
-      <section class="charts">
-        <h3>Gráficos</h3>
-        <div class="chart-box">
-          <p>📊 Aqui entraria um gráfico de linhas</p>
-        </div>
-        <div class="chart-box">
-          <p>📊 Aqui entraria um gráfico de barras</p>
-        </div>
-      </section>
-    </main>
-  </div>
-</body>
+      <!-- Conteúdo principal -->
+      <main class="main">
+        <header class="header">
+          <h2>Dashboard</h2>
+        </header>
+
+        <!-- Seção de registro -->
+        <section class="registration">
+          <h3>Registro</h3>
+          <form>
+            <input type="mumber" placeholder="Funcional">
+            <input type="password" placeholder="Senha">
+            <Select>
+              <option value="" disabled selected>Tipo de Usuário</option>
+              <option value="admin">Administrador</option>
+              <option value="instrutor">RH</option>
+              <option value="aluno">Instrutor</option>
+            </Select>
+            <button type="submit">Salvar</button>
+          </form>
+        </section>
+
+        <!-- Gestão de cursos -->
+        <section class="courses">
+          <h3>Gestão de Cursos</h3>
+          <div class="course-cards">
+            <div class="card">
+              <img src="https://via.placeholder.com/80" alt="Curso">
+              <h4>Título do Curso</h4>
+              <p>Descrição breve</p>
+            </div>
+            <div class="card">
+              <img src="https://via.placeholder.com/80" alt="Curso">
+              <h4>Outro Curso</h4>
+              <p>Descrição breve</p>
+            </div>
+            <div class="card">
+              <img src="https://via.placeholder.com/80" alt="Curso">
+              <h4>Mais um Curso</h4>
+              <p>Descrição breve</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Dashboards -->
+        <section class="charts">
+          <h3>Gráficos</h3>
+          <div id="chart-box" class="chart-box"></div>
+          <div id="chart-box1" class="chart-box1"></div>
+        </section>
+      </main>
+    </div>
+  </body>
+  <script src="./scripts.js"></script>
 </html>

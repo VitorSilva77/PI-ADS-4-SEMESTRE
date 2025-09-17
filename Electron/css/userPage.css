@@ -1,5 +1,4 @@
-/* Reset básico */
- *{
+*{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -202,9 +201,263 @@ body {
 }
 
 .chart-box {
+    height: 100%;
+    width: 400px;
     background: white;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
+
+
+/* Estilos para informações do usuário */
+.user-info {
+    background: rgba(255, 102, 0, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.user-name {
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-bottom: 5px;
+}
+
+.user-type {
+    display: block;
+    font-size: 12px;
+    color: rgb(255, 102, 0);
+}
+
+/* Estilos para seções dinâmicas */
+.welcome {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.welcome h3 {
+    color: rgb(255, 102, 0);
+    margin-bottom: 10px;
+}
+
+.permissions-info {
+    margin-top: 15px;
+}
+
+.permissions-info h4 {
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.permissions-info ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.permissions-info li {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.permissions-info li:before {
+    content: "✓ ";
+    color: rgb(255, 102, 0);
+    font-weight: bold;
+}
+
+/* Estilos para o mural */
+.board {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.post-form {
+    margin-bottom: 20px;
+}
+
+.post-form textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    resize: vertical;
+    min-height: 80px;
+    margin-bottom: 10px;
+}
+
+.post-form button {
+    background: rgb(255, 102, 0);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.posts {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.post {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+}
+
+.post h4 {
+    color: rgb(255, 102, 0);
+    margin-bottom: 10px;
+}
+
+.post small {
+    color: #666;
+}
+
+/* Estilos para chamados */
+.tickets {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.ticket-form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.ticket-form input,
+.ticket-form textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+}
+
+.ticket-form button {
+    background: rgb(255, 102, 0);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    align-self: flex-start;
+}
+
+.tickets-list {
+    border-top: 1px solid #eee;
+    padding-top: 20px;
+}
+
+.ticket-item {
+    background: #f9f9f9;
+    padding: 15px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ticket-item h5 {
+    color: rgb(255, 102, 0);
+    margin-bottom: 5px;
+}
+
+.ticket-status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.ticket-status.open {
+    background: #ffebee;
+    color: #c62828;
+}
+
+.resolve-ticket {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+/* Estilos para relatórios */
+.reports {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.reports .chart-box {
+    margin-bottom: 15px;
+}
+
+.reports .chart-box h4 {
+    color: rgb(255, 102, 0);
+    margin-bottom: 10px;
+}
+
+/* Estilos para mensagens */
+#registration-message {
+    margin-top: 10px;
+}
+
+/* Item ativo do menu */
+.item.active {
+    background: rgb(255, 71, 20);
+}
+
+/* Estilos para contadores */
+.students-count {
+    display: block;
+    margin-top: 10px;
+    font-size: 12px;
+    color: rgb(255, 102, 0);
+    font-weight: bold;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .sidebar {
+        width: 100%;
+        height: auto;
+    }
+    
+    .course-cards {
+        justify-content: center;
+    }
+    
+    .charts {
+        grid-template-columns: 1fr;
+    }
+    
+    .registration form {
+        flex-direction: column;
+    }
+}
+
