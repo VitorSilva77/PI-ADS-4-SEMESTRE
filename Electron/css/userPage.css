@@ -125,6 +125,11 @@ body {
     margin-bottom: 20px;
 }
 
+.section-title{
+    margin-top: 40px;
+    color: black;
+}
+
 .registration {
     display: flex;
     flex-direction: column;
@@ -172,12 +177,29 @@ body {
 .courses {
     margin-bottom: 20px;
 }
-
-.course-cards {
+.course-card {
     display: flex;
     gap: 15px;
     flex-wrap: wrap;
-    }
+    cursor: pointer;
+    transition: all 0.3s ease;
+    transform-origin: center;
+}
+
+.course-card:hover {
+    transform: scale(1.02);
+}
+
+.course-card.selected {
+    transform: scale(1.05);
+    background-color: #4a90e2;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.course-card.selected h3,
+.course-card.selected p {
+    color: white;
+}
 
 .card {
     background: white;
@@ -194,15 +216,25 @@ body {
 }
 
 /* Gráficos */
-.charts {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
+.chart {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.charts{
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
+    gap: 20px;
+    flex-wrap: wrap;
 }
 
 .chart-box {
     height: 100%;
-    width: 400px;
+    width: 600px;
     background: white;
     padding: 20px;
     border-radius: 8px;

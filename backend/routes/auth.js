@@ -68,29 +68,19 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Rota de logout
-router.post('/logout', requireAuth, (req, res) => {
+router.post('/logout', (req, res) => {
     try {
         req.session.destroy((err) => {
             if (err) {
                 console.error('Erro ao destruir sessão:', err);
-                return res.status(500).json({
-                    success: false,
-                    message: 'Erro ao fazer logout.'
-                });
+                return res.status(500).json({ error: 'Erro no logout' });
             }
-
-            res.json({
-                success: true,
-                message: 'Logout realizado com sucesso.'
-            });
+            res.clearCookie('connect.sid');
+            res.status(200).json({ message: 'Logout realizado com sucesso' });
         });
     } catch (error) {
         console.error('Erro no logout:', error);
-        res.status(500).json({
-            success: false,
-            message: 'Erro interno do servidor.'
-        });
+        res.status(500).json({ error: 'Erro no logout' });
     }
 });
 

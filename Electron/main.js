@@ -10,7 +10,7 @@ const CreateWindow = () => {
             webSecurity: false
         }
     })
-    win.loadFile('userPage.html')
+    win.loadFile('index.html')
 }
 
 app.whenReady().then(() => {
