@@ -3,12 +3,11 @@ const router = express.Router();
 const User = require('../models/User');
 const { requireAuth } = require('../middleware/auth');
 
-// Rota de login
+
 router.post('/login', async (req, res) => {
     try {
         const { funcional, senha } = req.body;
 
-        // Validar dados de entrada
         if (!funcional || !senha) {
             return res.status(400).json({
                 success: false,
@@ -16,7 +15,6 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // Buscar usuário por funcional
         const user = await User.findByFuncional(funcional);
         if (!user) {
             return res.status(401).json({
@@ -25,7 +23,6 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // Verificar senha
         const isValidPassword = await user.verifyPassword(senha);
         if (!isValidPassword) {
             return res.status(401).json({
@@ -34,10 +31,8 @@ router.post('/login', async (req, res) => {
             });
         }
 
-        // Obter permissões do usuário
         const permissions = await user.getPermissions();
 
-        // Criar sessão
         req.session.user = {
             id_usuario: user.id_usuario,
             funcional: user.funcional,
@@ -46,7 +41,6 @@ router.post('/login', async (req, res) => {
             permissions: permissions
         };
 
-        // Resposta de sucesso (sem senha)
         res.json({
             success: true,
             message: 'Login realizado com sucesso.',

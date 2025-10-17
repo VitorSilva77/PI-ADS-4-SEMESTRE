@@ -125,6 +125,44 @@ const requireUserType = (userTypes) => {
     };
 };
 
+const requireHierarchy = (requiredLevel) => {
+    return async (req, res, next) => {
+        try {
+            if (!req.session.user) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Acesso negado. Faça login para continuar.'
+                });
+            }
+
+            const user = await User.findById(req.session.user.id_usuario);
+            if (!user) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Usuário não encontrado.'
+                });
+            }
+
+            const userLevel = user.getHierarchyLevel();
+            if (userLevel < requiredLevel) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Acesso negado. Você não tem o nível hierárquico necessário.'
+                });
+            }
+
+            req.user = user;
+            next();
+        } catch (error) {
+            console.error('Erro no middleware de hierarquia:', error);
+            return res.status(500).json({
+                success: false,
+                message: 'Erro interno do servidor.'
+            });
+        }
+    };
+};
+
 const addUserToRequest = async (req, res, next) => {
     try {
         if (req.session.user) {
@@ -145,6 +183,7 @@ module.exports = {
     requirePermission,
     canRegisterUserType,
     requireUserType,
-    addUserToRequest
+    addUserToRequest,
+    requireHierarchy
 };
 

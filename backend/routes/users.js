@@ -2,14 +2,12 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const { executeQuery } = require('../config/database');
-const { requireAuth, requirePermission, canRegisterUserType, requireUserType } = require('../middleware/auth');
+const { requireAuth, requirePermission, canRegisterUserType, requireUserType, requireHierarchy } = require('../middleware/auth');
 
-// Rota para cadastrar usuário
 router.post('/register', requireAuth, requirePermission('canRegisterUsers'), canRegisterUserType, async (req, res) => {
     try {
         const { funcional, senha, nome, tipo_usuario } = req.body;
 
-        // Validar dados de entrada
         if (!funcional || !senha || !nome || !tipo_usuario) {
             return res.status(400).json({
                 success: false,
@@ -17,7 +15,6 @@ router.post('/register', requireAuth, requirePermission('canRegisterUsers'), can
             });
         }
 
-        // Verificar se a funcional já existe
         const existingUser = await User.findByFuncional(funcional);
         if (existingUser) {
             return res.status(400).json({
@@ -26,7 +23,6 @@ router.post('/register', requireAuth, requirePermission('canRegisterUsers'), can
             });
         }
 
-        // Obter ID do tipo de usuário
         const tipoQuery = 'SELECT id_tipo_usuario FROM tipos_usuario WHERE nome_tipo = ?';
         const tipoResult = await executeQuery(tipoQuery, [tipo_usuario]);
         
@@ -37,7 +33,6 @@ router.post('/register', requireAuth, requirePermission('canRegisterUsers'), can
             });
         }
 
-        // Criar usuário
         const newUser = await User.create({
             funcional,
             senha,
@@ -60,8 +55,7 @@ router.post('/register', requireAuth, requirePermission('canRegisterUsers'), can
     }
 });
 
-// Rota para listar usuários (apenas gerência)
-router.get('/', requireAuth, requireUserType('Gerencia'), async (req, res) => {
+router.get('/', requireAuth, requireHierarchy(4), async (req, res) => {
     try {
         const users = await User.findAll();
         
@@ -78,7 +72,6 @@ router.get('/', requireAuth, requireUserType('Gerencia'), async (req, res) => {
     }
 });
 
-// Rota para obter tipos de usuário que o usuário atual pode cadastrar
 router.get('/registerable-types', requireAuth, requirePermission('canRegisterUsers'), async (req, res) => {
     try {
         const user = await User.findById(req.session.user.id_usuario);
@@ -97,8 +90,7 @@ router.get('/registerable-types', requireAuth, requirePermission('canRegisterUse
     }
 });
 
-// Rota para obter usuários professores (para RH)
-router.get('/professors', requireAuth, requireUserType(['RH', 'Gerencia']), async (req, res) => {
+router.get('/professors', requireAuth, requireHierarchy(2), async (req, res) => {
     try {
         const query = `
             SELECT u.id_usuario, u.funcional, u.nome 
@@ -123,8 +115,7 @@ router.get('/professors', requireAuth, requireUserType(['RH', 'Gerencia']), asyn
     }
 });
 
-// Rota para obter usuários TI e RH (para TI)
-router.get('/ti-rh', requireAuth, requireUserType(['TI', 'Gerencia']), async (req, res) => {
+router.get('/ti-rh', requireAuth, requireHierarchy(3), async (req, res) => {
     try {
         const query = `
             SELECT u.id_usuario, u.funcional, u.nome, tu.nome_tipo as tipo_usuario
@@ -149,7 +140,6 @@ router.get('/ti-rh', requireAuth, requireUserType(['TI', 'Gerencia']), async (re
     }
 });
 
-// Rota para obter perfil do usuário
 router.get('/profile', requireAuth, async (req, res) => {
     try {
         const user = await User.findById(req.session.user.id_usuario);

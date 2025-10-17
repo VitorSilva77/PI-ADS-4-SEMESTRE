@@ -9,7 +9,6 @@ class Course {
         this.professor_responsavel = data.professor_responsavel;
     }
 
-    // Buscar todos os cursos
     static async findAll() {
         try {
             const query = `
@@ -27,7 +26,6 @@ class Course {
         }
     }
 
-    // Buscar cursos por professor
     static async findByProfessor(professorId) {
         try {
             const query = `
@@ -46,7 +44,6 @@ class Course {
         }
     }
 
-    // Buscar informações básicas dos cursos (para RH)
     static async findBasicInfo() {
         try {
             const query = `
@@ -69,7 +66,7 @@ class Course {
         }
     }
 
-    // Buscar curso por ID
+  
     static async findById(id) {
         try {
             const query = `
@@ -91,7 +88,7 @@ class Course {
         }
     }
 
-    // Criar novo curso
+    
     static async create(courseData) {
         try {
             const query = `
@@ -112,7 +109,7 @@ class Course {
         }
     }
 
-    // Atualizar curso
+    
     async update(courseData) {
         try {
             const query = `
@@ -135,7 +132,7 @@ class Course {
         }
     }
 
-    // Deletar curso
+    
     async delete() {
         try {
             const query = 'DELETE FROM cursos WHERE id_curso = ?';
@@ -149,4 +146,3 @@ class Course {
 }
 
 module.exports = Course;
-

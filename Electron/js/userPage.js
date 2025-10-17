@@ -1,41 +1,68 @@
-document.addEventListener('DOMContentLoaded', () => {
-    const logoutBtn = document.querySelector('.sidebar-logout');
-    
-    logoutBtn.addEventListener('click', async () => {
-        const success = await logout();
-        if (!success) {
-            alert('Erro ao fazer logout. Tente novamente.');
-        }
+document.addEventListener('DOMContentLoaded', async () => {
+
+    const logoutBtn = document.querySelector('.logout-button');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            window.auth.logout();
+            window.location.href = 'index.html';
+        });
+    }
+
+    const session = await window.auth.getUserSession();
+    if (!session) {
+        window.location.href = 'index.html';
+        return;
+    }
+
+    applyUIPermissions(session.permissions);
+    loadDynamicContent(session.permissions);
+});
+
+function applyUIPermissions(permissions) {
+    const elements = {
+        'viewAllCourses': document.querySelector('section.courses'),
+        'manageUsers': document.querySelector('section.registration'),
+        'postOnMural': document.querySelector('section.mural'),
+    };
+
+    Object.entries(elements).forEach(([perm, el]) => {
+        if (!el) return;
+        el.style.display = permissions.includes(perm) ? '' : 'none';
     });
-});
+}
 
-document.getElementById("formAviso").addEventListener("submit", function(event) {
-    event.preventDefault();
+async function loadDynamicContent(permissions) {
+   
+}
 
-    const tipoAviso = document.getElementById("tipoAviso").value;
-    const tituloAviso = document.getElementById("tituloAviso").value;
-    const descricaoAviso = document.getElementById("descricaoAviso").value;
 
-    const avisoDiv = document.createElement("div");
-    avisoDiv.classList.add("aviso");
+const form = document.getElementById('formNotice');
+if (form) {
+    form.addEventListener('submit', function(event) {
+        event.preventDefault();
 
-    avisoDiv.classList.add(tipoAviso);
+        const tipoAviso = document.getElementById('typeNotice').value;
+        const tituloAviso = document.getElementById('tituloAviso').value;
+        const descricaoAviso = document.getElementById('descricaoAviso').value;
 
-    const tipoAvisoElement = document.createElement("div");
-    tipoAvisoElement.classList.add("tipo-aviso");
-    tipoAvisoElement.textContent = tipoAviso.charAt(0).toUpperCase() + tipoAviso.slice(1); 
+        const avisoDiv = document.createElement('div');
+        avisoDiv.classList.add('aviso', tipoAviso);
 
-    const tituloAvisoElement = document.createElement("h4");
-    tituloAvisoElement.textContent = tituloAviso;
+        const tipoAvisoElement = document.createElement('div');
+        tipoAvisoElement.classList.add('tipo-aviso');
+        tipoAvisoElement.textContent = tipoAviso.charAt(0).toUpperCase() + tipoAviso.slice(1);
 
-    const descricaoAvisoElement = document.createElement("p");
-    descricaoAvisoElement.textContent = descricaoAviso;
+        const tituloAvisoElement = document.createElement('h4');
+        tituloAvisoElement.textContent = tituloAviso;
 
-    avisoDiv.appendChild(tipoAvisoElement);
-    avisoDiv.appendChild(tituloAvisoElement);
-    avisoDiv.appendChild(descricaoAvisoElement);
+        const descricaoAvisoElement = document.createElement('p');
+        descricaoAvisoElement.textContent = descricaoAviso;
 
-    document.getElementById("avisosList").appendChild(avisoDiv);
+        avisoDiv.appendChild(tipoAvisoElement);
+        avisoDiv.appendChild(tituloAvisoElement);
+        avisoDiv.appendChild(descricaoAvisoElement);
 
-    document.getElementById("formAviso").reset();
-});
+        document.getElementById('avisosList').appendChild(avisoDiv);
+        form.reset();
+    });
+}

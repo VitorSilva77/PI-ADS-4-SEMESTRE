@@ -14,7 +14,6 @@ class Ticket {
         this.data_atualizacao = data.data_atualizacao;
     }
 
-    // Buscar todos os chamados
     static async findAll() {
         try {
             const query = `
@@ -36,7 +35,6 @@ class Ticket {
         }
     }
 
-    // Buscar chamados por usuário
     static async findByUser(userId) {
         try {
             const query = `
@@ -59,7 +57,6 @@ class Ticket {
         }
     }
 
-    // Buscar chamados abertos (para TI)
     static async findOpen() {
         try {
             const query = `
@@ -82,7 +79,6 @@ class Ticket {
         }
     }
 
-    // Buscar chamado por ID
     static async findById(id) {
         try {
             const query = `
@@ -108,7 +104,6 @@ class Ticket {
         }
     }
 
-    // Criar novo chamado
     static async create(ticketData) {
         try {
             const query = `
@@ -130,7 +125,6 @@ class Ticket {
         }
     }
 
-    // Atualizar status do chamado
     async updateStatus(newStatus, responsavelTiId = null) {
         try {
             let query, params;
@@ -158,8 +152,7 @@ class Ticket {
             throw error;
         }
     }
-
-    // Resolver chamado (apenas TI)
+    
     async resolve(responsavelTiId) {
         try {
             return await this.updateStatus('Resolvido', responsavelTiId);
@@ -169,7 +162,6 @@ class Ticket {
         }
     }
 
-    // Atribuir chamado para TI
     async assignToTI(responsavelTiId) {
         try {
             return await this.updateStatus('Em Andamento', responsavelTiId);
@@ -179,7 +171,6 @@ class Ticket {
         }
     }
 
-    // Obter estatísticas de chamados
     static async getStatistics() {
         try {
             const query = `

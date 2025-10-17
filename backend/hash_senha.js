@@ -5,7 +5,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'profuturo_db'
+  database: 'pro_futuro'
 });
 
 async function atualizarSenhas() {

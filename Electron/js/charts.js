@@ -2,9 +2,8 @@ let selectedCourseId = null;
 let coursesData = [];
 let charts = {};
 
-// Inicialização dos gráficos
 function initializeCharts() {
-    // Gráfico de Frequência
+
     charts.attendance = new Chart(
         document.getElementById('attendanceChart'),
         {
@@ -21,7 +20,6 @@ function initializeCharts() {
         }
     );
 
-    // Gráfico de Desempenho
     charts.performance = new Chart(
         document.getElementById('performanceChart'),
         {
@@ -37,7 +35,6 @@ function initializeCharts() {
         }
     );
 
-    // Gráfico de Progresso
     charts.progress = new Chart(
         document.getElementById('progressChart'),
         {
@@ -59,17 +56,19 @@ function initializeCharts() {
 
 async function loadAndDisplayCourses() {
     try {
-        // Buscar dados dos cursos
-        coursesData = await fetchCourses();
+
+        const apiResp = await fetchCourses();
+        if (!apiResp || apiResp.success !== true) {
+            console.warn('Resposta inesperada ao buscar cursos:', apiResp);
+            return;
+        }
+        coursesData = apiResp.courses || [];
         console.log('Dados dos cursos carregados:', coursesData); // Debug
 
-        // Criar cards dos cursos
         createCourseCards(coursesData);
-        
-        // Inicializar gráficos
+
         initializeCharts();
-        
-        // Atualizar gráficos com dados gerais
+
         updateCharts();
 
     } catch (error) {
@@ -79,26 +78,37 @@ async function loadAndDisplayCourses() {
 
 function createCourseCards(courses) {
     const container = document.querySelector('.courses-container');
-    container.innerHTML = ''; // Limpa o container
+    container.innerHTML = ''; 
 
     courses.forEach(course => {
         const card = document.createElement('div');
         card.className = 'course-card';
-        card.setAttribute('data-course-id', course.id);
+        const courseId = course.id_curso || course.id;
+        const courseName = course.nome_curso || course.nome || course.name || 'Curso';
+        const totalAlunos = course.total_alunos || 0;
+        const status = course.status || 'Ativo';
+        card.setAttribute('data-course-id', courseId);
         
         card.innerHTML = `
-            <h3>${course.nome}</h3>
-            <p>Alunos: ${course.total_alunos || 0}</p>
-            <p>Status: ${course.status || 'Ativo'}</p>
+            <h3>${courseName}</h3>
+            <p>Alunos: ${totalAlunos}</p>
+            <p>Status: ${status}</p>
         `;
 
-        card.addEventListener('click', () => handleCardSelection(course.id));
+        card.addEventListener('click', () => handleCardSelection(courseId));
         container.appendChild(card);
     });
 }
 
-// Inicialização quando o documento carregar
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    
+    const session = await window.auth.getUserSession();
+    if (!session || !session.permissions.includes('viewAllCourses')) {
+        const coursesSection = document.querySelector('section.courses');
+        if (coursesSection) coursesSection.style.display = 'none';
+        return; 
+    }
+
     console.log('Página carregada, iniciando...');
     loadAndDisplayCourses();
 });

@@ -6,20 +6,19 @@ document.getElementById('login-form').addEventListener('submit', async (e) => {
     const errorMessage = document.getElementById('login-error-message');
     
     try {
-        const response = await login(funcional, senha);
+
+        const result = await window.auth.login({ funcional, senha });
         
-        if (response.success) {
-            
-            localStorage.setItem('user', JSON.stringify(response.user));
-            
+        if (result.success) {
             window.location.href = 'userPage.html';
+            
         } else {
-            errorMessage.textContent = response.message;
+            errorMessage.textContent = result.message || 'Funcional ou senha incorretos.';
             errorMessage.style.display = 'block';
         }
     } catch (error) {
         console.error('Erro ao fazer login:', error);
-        errorMessage.textContent = 'Erro ao fazer login. Tente novamente.';
+        errorMessage.textContent = 'Erro de comunicação com o servidor. Tente novamente.';
         errorMessage.style.display = 'block';
     }
 });

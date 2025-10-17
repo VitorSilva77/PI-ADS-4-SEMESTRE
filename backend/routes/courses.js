@@ -3,24 +3,22 @@ const router = express.Router();
 const Course = require('../models/Course');
 const { requireAuth, requirePermission, requireUserType } = require('../middleware/auth');
 
-// Rota para listar cursos (baseado nas permissões do usuário)
 router.get('/', requireAuth, async (req, res) => {
     try {
         const user = req.session.user;
         let courses;
 
-        // Verificar permissões do usuário
-        if (user.permissions.includes('canViewCourses')) {
-            // Professor e Gerência podem ver cursos detalhados
+        if (user.permissions.includes('viewAllCourses')) {
+
             if (user.tipo_usuario === 'Professor') {
-                // Professor vê apenas seus cursos
+
                 courses = await Course.findByProfessor(user.id_usuario);
             } else {
-                // Gerência vê todos os cursos
+
                 courses = await Course.findAll();
             }
-        } else if (user.permissions.includes('canViewBasicCourseInfo')) {
-            // RH vê apenas informações básicas
+        } else if (user.permissions.includes('viewReports')) {
+
             courses = await Course.findBasicInfo();
         } else {
             return res.status(403).json({
@@ -42,8 +40,7 @@ router.get('/', requireAuth, async (req, res) => {
     }
 });
 
-// Rota para obter curso específico
-router.get('/:id', requireAuth, requirePermission('canViewCourses'), async (req, res) => {
+router.get('/:id', requireAuth, requirePermission('viewAllCourses'), async (req, res) => {
     try {
         const { id } = req.params;
         const user = req.session.user;
@@ -56,7 +53,7 @@ router.get('/:id', requireAuth, requirePermission('canViewCourses'), async (req,
             });
         }
 
-        // Se for professor, verificar se é o responsável pelo curso
+        // Se for professor verifica se e o responsavel pelo curso
         if (user.tipo_usuario === 'Professor' && course.id_professor_responsavel !== user.id_usuario) {
             return res.status(403).json({
                 success: false,
@@ -199,4 +196,3 @@ router.get('/stats/overview', requireAuth, requireUserType(['RH', 'Gerencia']), 
 });
 
 module.exports = router;
-

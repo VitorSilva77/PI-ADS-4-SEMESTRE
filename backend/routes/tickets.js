@@ -3,17 +3,16 @@ const router = express.Router();
 const Ticket = require('../models/Ticket');
 const { requireAuth, requirePermission, requireUserType } = require('../middleware/auth');
 
-// Rota para listar chamados (baseado nas permissões do usuário)
+
 router.get('/', requireAuth, requirePermission('canAccessTickets'), async (req, res) => {
     try {
         const user = req.session.user;
         let tickets;
 
         if (user.permissions.includes('canResolveTickets')) {
-            // TI vê todos os chamados
             tickets = await Ticket.findAll();
+
         } else {
-            // Outros usuários veem apenas seus próprios chamados
             tickets = await Ticket.findByUser(user.id_usuario);
         }
 
@@ -30,7 +29,6 @@ router.get('/', requireAuth, requirePermission('canAccessTickets'), async (req, 
     }
 });
 
-// Rota para obter chamados abertos (apenas TI)
 router.get('/open', requireAuth, requirePermission('canResolveTickets'), async (req, res) => {
     try {
         const tickets = await Ticket.findOpen();
@@ -48,7 +46,7 @@ router.get('/open', requireAuth, requirePermission('canResolveTickets'), async (
     }
 });
 
-// Rota para obter chamado específico
+
 router.get('/:id', requireAuth, requirePermission('canAccessTickets'), async (req, res) => {
     try {
         const { id } = req.params;
@@ -84,13 +82,11 @@ router.get('/:id', requireAuth, requirePermission('canAccessTickets'), async (re
     }
 });
 
-// Rota para criar chamado
 router.post('/', requireAuth, requirePermission('canAccessTickets'), async (req, res) => {
     try {
         const { titulo, descricao } = req.body;
         const user = req.session.user;
 
-        // Validar dados de entrada
         if (!titulo || !descricao) {
             return res.status(400).json({
                 success: false,
@@ -118,7 +114,6 @@ router.post('/', requireAuth, requirePermission('canAccessTickets'), async (req,
     }
 });
 
-// Rota para atribuir chamado para TI
 router.put('/:id/assign', requireAuth, requirePermission('canResolveTickets'), async (req, res) => {
     try {
         const { id } = req.params;
@@ -148,7 +143,6 @@ router.put('/:id/assign', requireAuth, requirePermission('canResolveTickets'), a
     }
 });
 
-// Rota para resolver chamado (apenas TI)
 router.put('/:id/resolve', requireAuth, requirePermission('canResolveTickets'), async (req, res) => {
     try {
         const { id } = req.params;
@@ -178,14 +172,12 @@ router.put('/:id/resolve', requireAuth, requirePermission('canResolveTickets'), 
     }
 });
 
-// Rota para atualizar status do chamado (apenas TI)
 router.put('/:id/status', requireAuth, requirePermission('canResolveTickets'), async (req, res) => {
     try {
         const { id } = req.params;
         const { status } = req.body;
         const user = req.session.user;
 
-        // Validar status
         const validStatuses = ['Aberto', 'Em Andamento', 'Resolvido'];
         if (!validStatuses.includes(status)) {
             return res.status(400).json({
@@ -218,7 +210,6 @@ router.put('/:id/status', requireAuth, requirePermission('canResolveTickets'), a
     }
 });
 
-// Rota para obter estatísticas de chamados
 router.get('/stats/overview', requireAuth, requireUserType(['TI', 'Gerencia']), async (req, res) => {
     try {
         const stats = await Ticket.getStatistics();

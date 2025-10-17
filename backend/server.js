@@ -15,37 +15,43 @@ const ticketRoutes = require('./routes/tickets');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
+const allowedOrigins = [
+    'http://localhost:3000',
+];
+
 app.use(cors({
-    origin: true, // Permite qualquer origem para desenvolvimento
-    credentials: true // Permite cookies/sessões
+    origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.indexOf(origin) === -1) {
+            const msg = 'A política de CORS para este site não permite acesso da origem especificada.';
+            return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+    },
+    credentials: true 
 }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuração de sessão
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'profuturo_secret_key_2025',
+    secret: process.env.SESSION_SECRET || 'default_fallback_secret_key',
     resave: false,
     saveUninitialized: false,
     cookie: {
-        secure: false, // Para desenvolvimento (HTTP)
+        secure: process.env.NODE_ENV === 'production', 
         httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // 24 horas
+        maxAge: 24 * 60 * 60 * 1000 
     }
 }));
 
-// Middleware para adicionar usuário à requisição
 app.use(addUserToRequest);
 
-// Rotas
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/courses', courseRoutes);
 app.use('/api/tickets', ticketRoutes);
 
-// Rota de teste
 app.get('/api/health', (req, res) => {
     res.json({
         success: true,
@@ -54,7 +60,6 @@ app.get('/api/health', (req, res) => {
     });
 });
 
-// Rota para informações do servidor
 app.get('/api/info', (req, res) => {
     res.json({
         success: true,
@@ -72,7 +77,6 @@ app.get('/api/info', (req, res) => {
     });
 });
 
-// Middleware de tratamento de erros
 app.use((err, req, res, next) => {
     console.error('Erro não tratado:', err);
     res.status(500).json({
@@ -82,7 +86,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-// Middleware para rotas não encontradas
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -90,10 +93,9 @@ app.use((req, res) => {
     });
 });
 
-// Inicializar servidor
 async function startServer() {
     try {
-        // Testar conexão com o banco de dados
+
         console.log('🔄 Testando conexão com o banco de dados...');
         const dbConnected = await testConnection();
         
@@ -102,7 +104,6 @@ async function startServer() {
             process.exit(1);
         }
 
-        // Iniciar servidor
         app.listen(PORT, '0.0.0.0', () => {
             console.log('🚀 Servidor PróFuturo iniciado com sucesso!');
             console.log(`📍 URL: http://localhost:${PORT}`);
@@ -128,7 +129,7 @@ async function startServer() {
     }
 }
 
-// Tratamento de sinais para encerramento gracioso
+
 process.on('SIGINT', () => {
     console.log('\n🔄 Encerrando servidor...');
     process.exit(0);
@@ -139,7 +140,6 @@ process.on('SIGTERM', () => {
     process.exit(0);
 });
 
-// Inicializar
 startServer();
 
 module.exports = app;

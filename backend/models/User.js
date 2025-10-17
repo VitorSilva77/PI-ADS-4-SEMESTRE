@@ -11,7 +11,6 @@ class User {
         this.tipo_usuario = data.tipo_usuario;
     }
 
-    // Buscar usuário por funcional
     static async findByFuncional(funcional) {
         try {
             const query = `
@@ -32,7 +31,6 @@ class User {
         }
     }
 
-    // Buscar usuário por ID
     static async findById(id) {
         try {
             const query = `
@@ -53,7 +51,6 @@ class User {
         }
     }
 
-    // Verificar senha
     async verifyPassword(password) {
         try {
             return await bcrypt.compare(password, this.senha);
@@ -63,10 +60,9 @@ class User {
         }
     }
 
-    // Criar novo usuário
     static async create(userData) {
         try {
-            // Hash da senha
+
             const saltRounds = 10;
             const hashedPassword = await bcrypt.hash(userData.senha, saltRounds);
 
@@ -90,7 +86,6 @@ class User {
         }
     }
 
-    // Obter permissões do usuário
     async getPermissions() {
         try {
             const query = `
@@ -108,7 +103,6 @@ class User {
         }
     }
 
-    // Verificar se o usuário tem uma permissão específica
     async hasPermission(permission) {
         try {
             const permissions = await this.getPermissions();
@@ -119,36 +113,16 @@ class User {
         }
     }
 
-    // Obter tipos de usuário que este usuário pode cadastrar
-    static async getRegisterableUserTypes(userType) {
-        const registerableTypes = {
-            'RH': ['Professor'],
-            'TI': ['TI', 'RH'],
-            'Gerencia': ['Professor', 'RH', 'TI']
+    getHierarchyLevel() {
+        const hierarchy = {
+            'Gerencia': 4,
+            'TI': 3,
+            'RH': 2,
+            'Professor': 1
         };
-
-        return registerableTypes[userType] || [];
+        return hierarchy[this.tipo_usuario] || 0;
     }
 
-    // Listar todos os usuários (apenas para gerência)
-    static async findAll() {
-        try {
-            const query = `
-                SELECT u.*, tu.nome_tipo as tipo_usuario 
-                FROM usuarios u 
-                JOIN tipos_usuario tu ON u.id_tipo_usuario = tu.id_tipo_usuario 
-                ORDER BY u.nome
-            `;
-            
-            const result = await executeQuery(query);
-            return result.map(userData => new User(userData));
-        } catch (error) {
-            console.error('Erro ao listar usuários:', error);
-            throw error;
-        }
-    }
-
-    // Converter para objeto JSON (sem senha)
     toJSON() {
         const { senha, ...userWithoutPassword } = this;
         return userWithoutPassword;
