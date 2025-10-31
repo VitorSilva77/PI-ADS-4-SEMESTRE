@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com 'unsafe-inline' 'unsafe-eval'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="../assets/css/fonts.css">
     <link rel="stylesheet" href="../assets/css/media.css">
     <link rel="stylesheet" href="../assets/css/userPage.css">
-    <script src="../../node_modules/chart.js/dist/chart.umd.js"></script>
+    <link rel="stylesheet" href="../assets/css/darkmode.css">
+    <script src="../../../node_modules/chart.js/dist/chart.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
   </head>
   <body>
@@ -18,7 +19,7 @@
       <!-- Menu lateral -->
       <aside class="sidebar">
           <div class="logo-section">
-              <img src="./images/teste1.png" alt="Logo PróFuturo" class="logo-image">
+              <img src="../assets/images/teste1.png" alt="Logo PróFuturo" class="logo-image">
               <h2 class="logo">PróFuturo</h2>
           </div>
           
@@ -27,11 +28,18 @@
               <a href="./perfil.html" class="item"><i class="fa-solid fa-user"></i> Perfil</a>
               <a href="#" class="item"><i class="fa-solid fa-book"></i> Cursos</a>
               <a href="#" class="item"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
-              <a href="#" class="item"><i class="fa-solid fa-gear"></i> Configurações</a>
+              <div class="item theme-switcher">
+                <i class="fa-solid fa-moon"></i>
+                <span>Modo Escuro</span>
+                <label class="switch">
+                  <input type="checkbox" id="darkModeToggle">
+                  <span class="slider round"></span>
+                </label>
+              </div>
               <button class="logout-button">
                 <i class="fa-solid fa-right-from-bracket"></i>
                 <span>Sair</span>
-              </button
+              </button>
           </div>
       </aside>
 
@@ -48,7 +56,8 @@
           
           <form id="registration-form">
             <input type="text" id="regNome" placeholder="Nome Completo" required>
-            <input type="email" id="regEmail" placeholder="Email (Funcional)" required>
+            <input type="text" id="regFuncional" placeholder="Funcional" required>
+            <input type="email" id="regEmail" placeholder="Email" required>
             <input type="password" id="regPassword" placeholder="Senha" required>
             <select id="regRole" required>
               <option value="" disabled selected>Tipo de Usuário</option>
@@ -69,26 +78,18 @@
             </div>
         </section>
 
-        <section class="charts">
-            <div class="chart-container">
-                <canvas id="attendanceChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <canvas id="performanceChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <canvas id="progressChart"></canvas>
-            </div>
-        </section>
 
         <!-- Dashboards -->
         <section class="chart">
-
-          <h2 class="section-title">Graficos</h2>
-
+          <h2 class="section-title">Gráficos Gerais</h2>
           <div class="charts">
-            <div id="chart-box" class="chart-box"></div>
-            <div id="chart-box1" class="chart-box"></div>
+            <div id="chart-box" class="chart-box">
+              <canvas id="performanceChart"></canvas>
+            </div>
+
+            <div id="chart-box1" class="chart-box1">
+              <canvas id="attendanceChart"></canvas>
+            </div>
           </div>
         </section>
         
@@ -106,6 +107,6 @@
     </div>
   </body>
   <script src="../js/api.js"></script>
-  <script src="../js/userPage.js"></script>
   <script src="../js/charts.js"></script>
+  <script src="../js/userPage.js"></script>
 </html>

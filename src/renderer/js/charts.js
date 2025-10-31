@@ -1,83 +1,60 @@
-document.addEventListener('DOMContentLoaded', () => {
-  if (typeof Chart === 'undefined') {
-    console.warn('Chart.js não foi carregado. Os gráficos não serão renderizados.');
-    return;
-  }
+let currentAttendanceChart = null; 
+let currentPerformanceChart = null; 
+let currentProgressChart = null; 
 
-  loadAttendanceChart();
-  loadPerformanceChart();
-});
-
-function loadAttendanceChart() {
-  const attendanceCtx = document.getElementById('attendanceChart');
-  if (attendanceCtx) {
-    new Chart(attendanceCtx, {
-      type: 'doughnut',
-      data: {
-        labels: ['Presente', 'Ausente'],
-        datasets: [{
-          label: 'Frequência',
-          data: [85, 15], // Dados de exemplo
-          backgroundColor: ['#4CAF50', '#F44336'],
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          title: {
-            display: true,
-            text: 'Taxa de Frequência (Exemplo)'
-          }
-        }
-      }
-    });
-  }
-}
-
-
-async function loadPerformanceChart() {
+async function loadGradeDistributionChart(courseId = null) {
   const performanceCtx = document.getElementById('performanceChart');
   if (!performanceCtx) return;
 
-  let chartLabels = ['Carregando...'];
-  let chartData = [0];
-  let chartColors = ['#DDD'];
-
-  try {
-    // 1. Busca os dados da API
-    const response = await api.getCoursePerformanceReport();
-
-    if (response.success && response.data.length > 0) {
-      // 2. Processa os dados recebidos
-      chartLabels = response.data.map(item => item.titulo);
-      chartData = response.data.map(item => parseFloat(item.mediaNota).toFixed(2)); 
-      chartColors = chartData.map(() => '#2196F3'); 
-
-    } else if (response.data.length === 0) {
-      chartLabels = ['Nenhum dado encontrado'];
-      chartData = [0];
-    } else {
-      chartLabels = ['Erro ao carregar dados'];
-      chartData = [0];
-      chartColors = ['#F44336'];
-      console.error(response.error);
-    }
-  } catch (err) {
-    chartLabels = ['Erro de conexão com API'];
-    chartData = [0];
-    chartColors = ['#F44336'];
-    console.error(err);
+  if (currentPerformanceChart) {
+    currentPerformanceChart.destroy();
   }
 
-  // 3. Renderiza o gráfico com os dados (reais ou de erro)
-  new Chart(performanceCtx, {
+  const labels = ['0 - 1.9', '2 - 3.9', '4 - 5.9', '6 - 7.9', '8 - 10'];
+  
+  const dataMap = new Map();
+  labels.forEach(label => dataMap.set(label, 0));
+
+  let chartTitle = 'Distribuição de Notas (Geral)';
+
+  try {
+    const response = await api.getGradeDistributionReport(courseId);
+
+    if (response.success) {
+      
+      if (response.data && response.data.length > 0) {
+        response.data.forEach(item => {
+          if (dataMap.has(item.faixa_nota)) {
+            dataMap.set(item.faixa_nota, item.quantidade);
+          }
+        });
+        if (courseId) {
+          chartTitle = 'Distribuição de Notas (Curso Selecionado)';
+        }
+      } else {
+        chartTitle = courseId ? 'Sem notas neste curso' : 'Nenhuma nota registrada';
+      }
+      
+    } else {
+      console.error('Erro ao buscar dados:', response.error);
+      chartTitle = 'Erro ao carregar dados';
+    }
+
+  } catch (err) {
+    console.error('Erro de comunicação ao buscar distribuição:', err);
+    chartTitle = 'Erro de comunicação';
+  }
+
+  const chartData = labels.map(label => dataMap.get(label));
+
+  currentPerformanceChart = new Chart(performanceCtx, {
     type: 'bar',
     data: {
-      labels: chartLabels,
+      labels: labels,
       datasets: [{
-        label: 'Média de Notas (Cursos Concluídos)',
+        label: 'Quantidade de Alunos',
         data: chartData,
-        backgroundColor: chartColors,
+        backgroundColor: '#2196F3',
       }]
     },
     options: {
@@ -85,13 +62,69 @@ async function loadPerformanceChart() {
       plugins: {
         title: {
           display: true,
-          text: 'Desempenho por Curso (Média de Nota Final)'
+          text: chartTitle
         }
       },
       scales: {
         y: {
           beginAtZero: true,
-          max: 10 
+          ticks: {
+            precision: 0
+          }
+        }
+      }
+    }
+  });
+}
+
+async function loadEnrollmentStatusChart(courseId = null) {
+  const statusCtx = document.getElementById('attendanceChart'); 
+  if (!statusCtx) return;
+
+  if (currentAttendanceChart) {
+    currentAttendanceChart.destroy();
+  }
+
+  let title = 'Status de Matrículas (Geral)';
+  if (courseId) {
+    const card = document.querySelector(`.course-card[data-course-id="${courseId}"] h4`);
+    const courseName = card ? card.textContent : 'Curso Selecionado';
+    title = `Status de Matrículas (${courseName})`;
+  }
+
+  const response = await api.getEnrollmentStatusReport(courseId);
+  
+  let concludedCount = 0;
+  let inProgressCount = 0;
+
+  if (response.success && response.data) {
+    response.data.forEach(item => {
+      if (item.status === 'concluido') {
+        concludedCount = item.count;
+      } else if (item.status === 'cursando') {
+        inProgressCount = item.count;
+      }
+    });
+  } else {
+    console.error('Erro ao buscar dados de status:', response.error);
+  }
+
+  currentAttendanceChart = new Chart(statusCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Concluído', 'Cursando'],
+      datasets: [{
+        label: 'Status de Alunos',
+        data: [concludedCount, inProgressCount],
+        backgroundColor: ['#36A2EB', '#FFCE56'],
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        title: {
+          display: true,
+          text: title
         }
       }
     }

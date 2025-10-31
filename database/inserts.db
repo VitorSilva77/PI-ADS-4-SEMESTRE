@@ -1,0 +1,24 @@
+-- 2. Insere as Roles (perfis de usuário)
+INSERT INTO roles (nome, descricao) VALUES
+('TI', 'Administrador do Sistema'),
+('RH', 'Recursos Humanos'),
+('Professor', 'Instrutor do curso'),
+('Aluno', 'Estudante');
+
+-- 3. Insere os Usuários de Teste
+-- SENHA DE TODOS: senha123
+INSERT INTO usuarios (funcional, nome, email, password_hash, role_id) VALUES
+('11111', 'Admin TI', 'ti@profuturo.com', '$2a$12$.4u8g2.H8uulQH9zlQqQcOfcUC2fu40KmVhdDQm94VYDG2//SWHQu', 1),
+('22222', 'Recursos Humanos', 'rh@profuturo.com', '$2a$12$.4u8g2.H8uulQH9zlQqQcOfcUC2fu40KmVhdDQm94VYDG2//SWHQu', 2),
+('12121','Prof. Carlos', 'prof@profuturo.com', '$2a$12$.4u8g2.H8uulQH9zlQqQcOfcUC2fu40KmVhdDQm94VYDG2//SWHQu', 3),
+('12345','Aluna Beatriz', 'aluno@profuturo.com', '$2a$12$.4u8g2.H8uulQH9zlQqQcOfcUC2fu40KmVhdDQm94VYDG2//SWHQu', 4);
+
+-- 4. Insere Cursos de Teste
+INSERT INTO cursos (titulo, descricao, carga_horaria, professor_id, imagem_path) VALUES
+('Introdução ao Electron', 'Curso para construir apps desktop com JS.', 40, 3, 'aprenda-youtube.svg'),
+('Gestão de Projetos Ágeis', 'Curso sobre Scrum e Kanban.', 20, 3, 'auxiliar-administrativo.svg');
+
+-- 5. Insere Matrículas de Teste
+INSERT INTO matriculas (aluno_id, curso_id, status, nota_final) VALUES
+(4, 1, 'cursando', NULL),
+(4, 2, 'concluido', 8.5);

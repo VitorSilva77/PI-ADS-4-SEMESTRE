@@ -14,7 +14,8 @@ function registerIpcHandlers() {
   // Autenticação
   ipcMain.handle('auth:login', authController.handleLogin);
   ipcMain.handle('auth:logout', authController.handleLogout);
-  ipcMain.handle('auth:get-session', authController.handleGetSession);
+  ipcMain.handle('auth:restore-session', authController.handleRestoreSession);
+  
 
   // Cursos
   ipcMain.handle('courses:get-all', courseController.handleGetAllCourses);
@@ -26,6 +27,8 @@ function registerIpcHandlers() {
 
   // Relatórios 
   ipcMain.handle('reports:course-performance', reportController.handleGetCoursePerformance);
+  ipcMain.handle('reports:enrollment-status', reportController.handleGetEnrollmentStatus);
+  ipcMain.handle('reports:grade-distribution', reportController.handleGetGradeDistribution);
 }
 
 function createWindow() {

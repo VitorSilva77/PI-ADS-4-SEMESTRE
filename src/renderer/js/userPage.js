@@ -1,38 +1,52 @@
 let currentUser = null;
 
-(async () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  
   try {
-    const response = await api.getSession(); 
+    const storedUser = localStorage.getItem('profuturo_currentUser');
+    console.log('USERPAGE.JS: Valor lido do localStorage:', storedUser);
 
-    if (response.success && response.user) {
-      currentUser = response.user;
-      initializeApp(currentUser);
+    if (storedUser) {
+      currentUser = JSON.parse(storedUser); 
+ 
+      if (!currentUser || !currentUser.id) { 
+        console.warn('USERPAGE.JS: Sessão encontrada, mas inválida. Limpando.');
+        localStorage.removeItem('profuturo_currentUser');
+        currentUser = null;
+      } else {
+         console.log('USERPAGE.JS: Usuário (após JSON.parse):', currentUser);
+         await api.restoreSession(currentUser);
+         console.log('Sessão restaurada do localStorage.');
+      }
+    }
+
+    if (currentUser) {
+      console.log(`USERPAGE.JS: Renderizando página para: ${currentUser.nome}`);
+      console.log(`Usuário logado: ${currentUser.nome} (Role: ${currentUser.role})`);
+      initializePage(currentUser); 
+      await loadPageContent();
     } else {
-      console.warn('Nenhuma sessão encontrada. Redirecionando para o login.');
+      console.warn('Nenhuma sessão válida encontrada. Redirecionando para o login.');
       window.location.href = 'index.html';
     }
   } catch (err) {
-    console.error('Erro fatal ao verificar sessão:', err);
+    console.error('Erro fatal ao verificar sessão (JSON corrompido?):', err);
+    localStorage.removeItem('profuturo_currentUser'); 
     window.location.href = 'index.html';
   }
-})();
+});
 
-function initializeApp(user) {
-  document.addEventListener('DOMContentLoaded', () => {
-    console.log(`Usuário logado: ${user.nome} (Role: ${user.role})`);
-    
-    attachGlobalListeners();
-    renderUserInfo(user);
-    applyRBAC(user.role);
-    
-    loadPageContent();
-  });
+function initializePage(user) {
+  renderUserInfo(user);
+  applyRBAC(user.role_name);
+  attachGlobalListeners();
+  initializeThemeSwitcher();
 }
 
 async function loadPageContent() {
  
   await loadCourseCards();
-  await loadDashboardData();
+  await loadDashboardData(null);
 }
 
 function attachGlobalListeners() {
@@ -40,6 +54,7 @@ function attachGlobalListeners() {
   if (logoutButton) {
     logoutButton.addEventListener('click', async () => {
       try {
+        localStorage.removeItem('profuturo_currentUser');
         await api.logout();
         window.location.href = 'index.html';
       } catch (err) {
@@ -88,12 +103,11 @@ function applyRBAC(role) {
   if (!roles.isTI && !roles.isRH && !roles.isProfessor) {
      document.querySelector('.mural .form-container')?.remove();
   }
-  if (!roles.isTI && !roles.isRH) {
+  if (!roles.isTI && !roles.isRH && !roles.isProfessor) {
     document.querySelector('.charts')?.remove();
     document.querySelector('section.chart')?.remove();
   }
 
-  // Áreas Especiais (conforme seu HTML)
   if (roles.isProfessor) {
     const area = document.getElementById('area-criacao-cursos');
     if (area) area.style.display = 'block';
@@ -102,6 +116,31 @@ function applyRBAC(role) {
     const area = document.getElementById('area-atribuicao-professores');
     if (area) area.style.display = 'block';
   }
+}
+
+function initializeThemeSwitcher() {
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    if (!darkModeToggle) return;
+
+    const applyTheme = () => {
+        if (darkModeToggle.checked) {
+            body.classList.add('dark-mode');
+            localStorage.setItem('darkMode', 'enabled');
+        } else {
+            body.classList.remove('dark-mode');
+            localStorage.setItem('darkMode', 'disabled');
+        }
+    };
+
+    if (localStorage.getItem('darkMode') === 'enabled') {
+        darkModeToggle.checked = true;
+    }
+
+    applyTheme();
+
+    darkModeToggle.addEventListener('change', applyTheme);
 }
 
 
@@ -128,9 +167,17 @@ async function loadCourseCards() {
         const card = document.createElement('div');
         card.className = 'course-card'; 
         card.dataset.courseId = course.id;
+
+        const imagePath = course.imagem_path 
+          ? `../assets/images/${course.imagem_path}` 
+          : '../assets/images/teste1.png'; //imagem defaut que carreag se nn existir o caminho na tabela
+
         card.innerHTML = `
-          <h4>${course.titulo}</h4>
-          <p>Carga horária: ${course.carga_horaria || 'N/D'}h</p>
+          <img src="${imagePath}" alt="${course.titulo}" class="course-card-image">
+          <div class="course-card-content">
+            <h4>${course.titulo}</h4>
+            <p>Carga horária: ${course.carga_horaria || 'N/D'}h</p>
+          </div>
         `;
         container.appendChild(card);
       });
@@ -177,8 +224,20 @@ async function loadDashboardData(courseId = null) {
     if (chartSection) {
         const title = chartSection.querySelector('.section-title');
         if (title) {
-            title.textContent = courseId ? `Relatórios do Curso Selecionado` : 'Relatórios Gerais';
+            title.textContent = courseId ? `Gráficos do Curso Selecionado` : 'Gráficos Gerais';
         }
+    }
+    try {
+      if (typeof loadGradeDistributionChart === 'function') {
+        await loadGradeDistributionChart(courseId);
+      }
+      
+      if (typeof loadEnrollmentStatusChart === 'function') {
+        loadEnrollmentStatusChart(courseId); 
+      }
+
+    } catch (err) {
+      console.error('Erro ao recarregar os gráficos:', err);
     }
 }
 
@@ -187,12 +246,13 @@ async function handleRegistrationSubmit(e) {
   const form = e.target;
   const button = form.querySelector('button[type="submit"]');
   
+  const funcional = document.getElementById('regFuncional').value;
   const nome = document.getElementById('regNome').value;
   const email = document.getElementById('regEmail').value;
   const password = document.getElementById('regPassword').value;
   const roleName = document.getElementById('regRole').value;
 
-  if (!nome || !email || !password || !roleName) {
+  if (!funcional || !nome || !email || !password || !roleName) {
       alert('Por favor, preencha todos os campos.');
       return;
   }
@@ -201,7 +261,7 @@ async function handleRegistrationSubmit(e) {
   button.textContent = 'Salvando...';
 
   try {
-    const response = await api.createUser({ nome, email, password, roleName });
+    const response = await api.createUser({ funcional, nome, email, password, roleName });
 
     if (response.success) {
       alert('Usuário criado com sucesso!');

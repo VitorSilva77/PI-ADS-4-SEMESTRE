@@ -5,8 +5,15 @@ const apiKey = 'api';
 const api = {
 
   /**
+   * Restaura a sessão no main process
+   * @param {object} user 
+   * @returns {Promise<{success: boolean, error?: string}>}
+   */
+  restoreSession: (user) => ipcRenderer.invoke('auth:restore-session', user),
+
+  /**
    * Tenta fazer login 
-   * @param {object} credentials - { funcional, password }
+   * @param {object} credentials 
    * @returns {Promise<{success: boolean, user?: object, error?: string}>}
    */
   login: (credentials) => ipcRenderer.invoke('auth:login', credentials),
@@ -21,7 +28,7 @@ const api = {
    * Verifica se há uma sessão de usuário ativa 
    * @returns {Promise<{success: boolean, user?: object, error?: string}>}
    */
-  getSession: () => ipcRenderer.invoke('auth:get-session'),
+ 
 
   //cursos
   /**
@@ -42,9 +49,12 @@ const api = {
   createUser: (userData) => ipcRenderer.invoke('users:create', userData),
 
   //relatórios
-  getCoursePerformanceReport: () => ipcRenderer.invoke('reports:course-performance'), 
-
+  getCoursePerformanceReport: (courseId) => ipcRenderer.invoke('reports:course-performance', courseId),
+  getEnrollmentStatusReport: (courseId) => ipcRenderer.invoke('reports:enrollment-status', courseId),
+  getGradeDistributionReport: (courseId) => ipcRenderer.invoke('reports:grade-distribution', courseId),
   //auditoria
+  getAuditLogs: () => ipcRenderer.invoke('audit:get-logs'),
+  
 };
 
 try {

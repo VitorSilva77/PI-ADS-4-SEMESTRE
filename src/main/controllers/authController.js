@@ -21,11 +21,12 @@ async function handleLogout() {
   }
 }
 
-async function handleGetSession() {
+async function handleRestoreSession(event, user) {
   try {
-    const user = authService.getSession();
-    return { success: true, user };
+    authService.setCurrentUser(user);
+    return { success: true };
   } catch (error) {
+    console.error('Falha ao restaurar sessão:', error.message);
     return { success: false, error: error.message };
   }
 }
@@ -33,5 +34,5 @@ async function handleGetSession() {
 module.exports = {
   handleLogin,
   handleLogout,
-  handleGetSession
+  handleRestoreSession 
 };
