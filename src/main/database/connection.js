@@ -1,4 +1,7 @@
 const knex = require('knex');
+const path = require('path');
+const fs = require('fs');
+
 let dbInstance;
 
 function init() {
@@ -15,6 +18,9 @@ function init() {
   console.log('-----------------------------------------');
   
   console.log('Inicializando conexão com o banco de dados...');
+
+  const caPath = path.join(__dirname, 'ssl', 'server-ca.pem');
+
   dbInstance = knex({
     client: 'mysql2', 
     connection: {
@@ -23,8 +29,9 @@ function init() {
       user: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      ssl: { ca: fs.readFileSync(caPath) },
     },
-    ssl: { rejectUnauthorized: false },
+
     pool: { min: 2, max: 10 }
   });
 
