@@ -169,7 +169,7 @@ async function loadCourseCards() {
         card.dataset.courseId = course.id;
 
         const imagePath = course.imagem_path 
-          ? `'${course.imagem_path}'`
+          ? course.imagem_path
           : '../assets/images/teste1.png'; // Imagem default local, caso o campo esteja null no banco
 
         card.innerHTML = `

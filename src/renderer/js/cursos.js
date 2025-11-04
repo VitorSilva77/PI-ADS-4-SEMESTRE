@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', () => {
             card.dataset.courseId = course.id;
 
             const imagePath = course.imagem_path 
-                ? `../assets/images/${course.imagem_path}` 
+                ? course.imagem_path
                 : '../assets/images/teste1.png';
 
             card.innerHTML = `
