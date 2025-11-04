@@ -5,6 +5,14 @@ function init() {
   if (dbInstance) {
     return; 
   }
+
+  console.log('--- VARIÁVEIS DE AMBIENTE PARA O BANCO ---');
+  console.log('DB_HOST:', process.env.DB_HOST);
+  console.log('DB_PORT:', process.env.DB_PORT);
+  console.log('DB_USER:', process.env.DB_USER);
+  console.log('DB_PASSWORD:', process.env.DB_PASSWORD); 
+  console.log('DB_NAME:', process.env.DB_NAME);
+  console.log('-----------------------------------------');
   
   console.log('Inicializando conexão com o banco de dados...');
   dbInstance = knex({
@@ -16,6 +24,7 @@ function init() {
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
     },
+    ssl: { rejectUnauthorized: false },
     pool: { min: 2, max: 10 }
   });
 
