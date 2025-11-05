@@ -32,8 +32,18 @@ async function getGradeDistributionReport(courseId = null) {
   return reportRepository.getGradeDistribution(courseId); 
 }
 
+async function getCourseAveragesReport() {
+  const user = getCurrentUser();
+  if (!user) {
+    throw new Error('Não autenticado.');
+  }
+  checkRole(user.role_name, [ROLES.TI, ROLES.RH, ROLES.PROFESSOR]);
+  return reportRepository.getCourseAverages(); 
+}
+
 module.exports = { 
   getCoursePerformanceReport,
   getEnrollmentStatusReport,
-  getGradeDistributionReport 
+  getGradeDistributionReport,
+  getCourseAveragesReport
 };

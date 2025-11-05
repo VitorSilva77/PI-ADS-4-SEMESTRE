@@ -44,7 +44,7 @@ CREATE TABLE matriculas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     aluno_id INT NOT NULL,
     curso_id INT NOT NULL,
-    data_matricula DATE DEFAULT CURRENT_TIMESTAMP,
+    data_matricula DATETIME DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(50) DEFAULT 'cursando', -- 'cursando', 'concluido', 'cancelado'
     nota_final DECIMAL(5, 2), 
     

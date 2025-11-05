@@ -29,8 +29,18 @@ async function handleGetGradeDistribution(event, courseId) {
   }
 }
 
+async function handleGetCourseAverages(event) {
+  try {
+    const data = await reportService.getCourseAveragesReport();
+    return { success: true, data };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
 module.exports = { 
   handleGetCoursePerformance,
   handleGetEnrollmentStatus,
-  handleGetGradeDistribution 
+  handleGetGradeDistribution,
+  handleGetCourseAverages
 };

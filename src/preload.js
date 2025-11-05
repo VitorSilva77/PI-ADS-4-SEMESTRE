@@ -52,6 +52,7 @@ const api = {
   getCoursePerformanceReport: (courseId) => ipcRenderer.invoke('reports:course-performance', courseId),
   getEnrollmentStatusReport: (courseId) => ipcRenderer.invoke('reports:enrollment-status', courseId),
   getGradeDistributionReport: (courseId) => ipcRenderer.invoke('reports:grade-distribution', courseId),
+  getCourseAveragesReport: () => ipcRenderer.invoke('reports:course-averages'),
   //auditoria
   getAuditLogs: () => ipcRenderer.invoke('audit:get-logs'),
   
