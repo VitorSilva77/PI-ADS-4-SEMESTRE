@@ -40,7 +40,6 @@ function initializePage(user) {
   renderUserInfo(user);
   applyRBAC(user.role_name);
   attachGlobalListeners();
-  initializeThemeSwitcher();
 }
 
 async function loadPageContent() {
@@ -118,31 +117,6 @@ function applyRBAC(role) {
   }
 }
 
-function initializeThemeSwitcher() {
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const body = document.body;
-
-    if (!darkModeToggle) return;
-
-    const applyTheme = () => {
-        if (darkModeToggle.checked) {
-            body.classList.add('dark-mode');
-            localStorage.setItem('darkMode', 'enabled');
-        } else {
-            body.classList.remove('dark-mode');
-            localStorage.setItem('darkMode', 'disabled');
-        }
-    };
-
-    if (localStorage.getItem('darkMode') === 'enabled') {
-        darkModeToggle.checked = true;
-    }
-
-    applyTheme();
-
-    darkModeToggle.addEventListener('change', applyTheme);
-}
-
 
 async function loadCourseCards() {
   const container = document.querySelector('.courses-container');
@@ -150,7 +124,7 @@ async function loadCourseCards() {
 
   try {
     let response;
-    if (currentUser && currentUser.role_name === 'Professor') {
+    if (currentUser && currentUser.role === 'Professor') {
       response = await api.getCoursesByProfessor(currentUser.id);
     } else {
       response = await api.getAllCourses();
@@ -169,8 +143,8 @@ async function loadCourseCards() {
         card.dataset.courseId = course.id;
 
         const imagePath = course.imagem_path 
-          ? course.imagem_path
-          : '../assets/images/teste1.png'; // Imagem default local, caso o campo esteja null no banco
+          ? `../assets/images/${course.imagem_path}` 
+          : '../assets/images/teste1.png'; //imagem defaut que carreag se nn existir o caminho na tabela
 
         card.innerHTML = `
           <img src="${imagePath}" alt="${course.titulo}" class="course-card-image">
