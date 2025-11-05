@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
         btnGenerate.textContent = 'Gerando...';
         tableContainer.innerHTML = '<p>Gerando relatório, por favor aguarde...</p>';    
         try {
-            const responseAwait = window.api.getCourseAveragesReport();
+            const responseAwait = await window.api.getCourseAveragesReport();
             if (responseAwait.success && responseAwait.data) {
                 reportData = responseAwait.data;
                 

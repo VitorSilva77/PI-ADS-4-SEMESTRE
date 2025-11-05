@@ -60,9 +60,9 @@ async function getGradeDistribution(courseId = null) {
   return await query;
 }
 
-const getCourseAverages = async () => {
-  const query = `
-        WITH medias_por_curso AS (
+/* 
+  query usada no knex:
+  WITH medias_por_curso AS (
             SELECT 
                 curso_id,
                 AVG(nota_final) AS media_curso
@@ -80,10 +80,37 @@ const getCourseAverages = async () => {
         INNER JOIN medias_por_curso AS m 
         ON c.id = m.curso_id
         ORDER BY c.titulo;
-    `;
+*/
 
-  const result = await pool.query(query)
-  return result.rows;
+const getCourseAverages = async () => {
+  try {
+    const mediasPorCurso = getDb()('matriculas') //cria a subconsulta/CTE que estavamos usando na query anterior
+      .select('curso_id')
+      .avg('nota_final as media_curso')
+      .where('status', 'concluido') // apenas de alunos que concluíram
+      .whereNotNull('nota_final') // ignora notas null
+      .groupBy('curso_id')
+      .as('m'); 
+
+    const results = await getDb()('cursos as c') 
+      .join(mediasPorCurso, 'c.id', '=', 'm.curso_id') 
+      .leftJoin('usuarios as u', 'c.professor_id', '=', 'u.id') 
+      .select(
+        'c.id',
+        'c.titulo',
+        'c.descricao',
+        'c.carga_horaria',
+        'u.nome as professor_nome', 
+        'm.media_curso' 
+      )
+      .orderBy('c.titulo', 'asc');
+
+    return results;
+
+  } catch (error) {
+    console.error('Erro ao buscar médias dos cursos:', error);
+    throw new Error('Falha ao gerar relatório de médias.');
+  }
 }
 
 module.exports = {
