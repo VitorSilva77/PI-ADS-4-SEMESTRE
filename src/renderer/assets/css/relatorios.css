@@ -1,4 +1,5 @@
-*{
+/* Estilização Geral */
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -6,8 +7,8 @@
 }
 
 body {
-  background: #f5f6fa;
-  color: #333;
+  background: #f0f2f5; /* Fundo mais claro e suave */
+  color: #1c1e21;
   font-family: 'poppinsregular', sans-serif;
 }
 
@@ -25,64 +26,144 @@ body {
 
 .header {
     margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
 }
 
-.section-title{
-    margin-top: 40px;
-    color: black;
+.header h2 {
+    color: #333;
+    font-weight: 600;
+    font-size: 1.8em;
 }
 
-/* Tabela de relatórios */
+/* Seção de Relatórios */
+.reports-section {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08); /* Sombra mais pronunciada */
+}
 
-/* Estilos para a seção principal */
 .report-options {
-    margin-bottom: 20px;
+    margin-bottom: 30px;
+    display: flex;
+    gap: 15px; /* Espaçamento entre botões */
+    flex-wrap: wrap;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9; /* Fundo leve para a área de botões */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 
 .report-options button {
-    background: rgb(255, 71, 20);
+    /* Cor principal do projeto (laranja/vermelho) */
+    background: linear-gradient(45deg, #ff6b6b, #ee5253); 
     color: white;
     border: none;
-    padding: 10px 15px;
-    border-radius: 6px;
+    padding: 12px 25px;
+    border-radius: 25px; /* Botões mais arredondados (pill shape) */
     cursor: pointer;
     font-size: 1em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(255, 107, 107, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.report-options button:hover {
+    background: linear-gradient(45deg, #ee5253, #ff6b6b);
+    box-shadow: 0 6px 12px rgba(255, 107, 107, 0.4);
+    transform: translateY(-2px);
 }
 
 .report-options button:disabled {
     background: #ccc;
     cursor: not-allowed;
+    box-shadow: none;
+    transform: none;
 }
 
-/* estilos do ajax */
+/* Estilos para a Tabela de Relatórios */
+#report-table-container {
+    margin-top: 20px;
+}
+
 #report-table-container h2 {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     color: #333;
+    font-size: 1.6em;
+    border-left: 5px solid #ff6b6b; /* Destaque com a cor principal */
+    padding-left: 15px;
+    font-weight: 600;
 }
 
 #report-table-container table {
     width: 100%;
-    border-collapse: collapse; 
+    border-collapse: separate; 
+    border-spacing: 0;
     margin-top: 10px;
+    border-radius: 10px; /* Borda mais arredondada */
+    overflow: hidden; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 #report-table-container th,
 #report-table-container td {
-    border: 1px solid #ddd; 
-    padding: 10px;         
-    text-align: left;     
+    padding: 14px 18px; /* Mais padding */
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0; /* Linhas de separação mais suaves */
+    font-size: 0.95em;
 }
 
 #report-table-container thead {
-    background-color: orange; /* cor de fundo do cabeçalho */
-    color: #333;
-    font-weight: bold;
+    background-color: #34495e; /* Azul escuro profissional */
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 #report-table-container tbody tr:nth-child(even) {
-    background-color: #f9f9f9; /* cor alternada (zebrado) */
+    background-color: #f9f9f9; 
 }
 
 #report-table-container tbody tr:hover {
     background-color: #f0f0f0; 
+    transition: background-color 0.2s ease;
+}
+
+#report-table-container tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Estilos para o botão de download */
+.download-button {
+    background: #2ecc71; /* Verde para download */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.download-button:hover {
+    background: #27ae60;
+}
+
+/* Estilo para mensagens de status */
+#report-table-container p {
+    padding: 15px;
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    border-radius: 6px;
+    font-weight: 500;
 }

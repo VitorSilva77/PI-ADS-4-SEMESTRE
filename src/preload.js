@@ -53,6 +53,10 @@ const api = {
   getEnrollmentStatusReport: (courseId) => ipcRenderer.invoke('reports:enrollment-status', courseId),
   getGradeDistributionReport: (courseId) => ipcRenderer.invoke('reports:grade-distribution', courseId),
   getCourseAveragesReport: () => ipcRenderer.invoke('reports:course-averages'),
+  getDetailedEnrollmentsReport: () => ipcRenderer.invoke('reports:detailed-enrollments'),
+  getTotalStudentsPerCourseReport: () => ipcRenderer.invoke('reports:total-students-per-course'),
+
+  getStudentsPerProfessorReport: () => ipcRenderer.invoke('reports:students-per-professor'),
   //auditoria
   getAuditLogs: () => ipcRenderer.invoke('audit:get-logs'),
   

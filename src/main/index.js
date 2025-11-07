@@ -30,6 +30,10 @@ function registerIpcHandlers() {
   ipcMain.handle('reports:enrollment-status', reportController.handleGetEnrollmentStatus);
   ipcMain.handle('reports:grade-distribution', reportController.handleGetGradeDistribution);
   ipcMain.handle('reports:course-averages', reportController.handleGetCourseAverages);
+  ipcMain.handle('reports:detailed-enrollments', reportController.handleGetDetailedEnrollments);
+  ipcMain.handle('reports:total-students-per-course', reportController.handleGetTotalStudentsPerCourse);
+
+  ipcMain.handle('reports:students-per-professor', reportController.handleGetStudentsPerProfessor);
 }
 
 function createWindow() {

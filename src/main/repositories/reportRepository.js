@@ -113,9 +113,60 @@ const getCourseAverages = async () => {
   }
 }
 
+async function getDetailedEnrollments() {
+  const query = getDb()('matriculas as m')
+    .join('usuarios as u', 'm.aluno_id', '=', 'u.id')
+    .join('cursos as c', 'm.curso_id', '=', 'c.id')
+    .select(
+      'u.funcional as funcional',
+      'u.nome as nome',
+      'u.email as email',
+      'c.titulo as nome_curso',
+      getDb().raw("DATE_FORMAT(m.data_matricula, '%d/%m/%Y') as data_matricula"), // Usando strftime para compatibilidade com SQLite/Knex
+      'm.status as status',
+      'm.nota_final as nota'
+    )
+    .orderBy('m.data_matricula', 'desc');
+
+  return await query;
+}
+
+async function getTotalStudentsPerCourse() {
+  const query = getDb()('matriculas')
+    .join('cursos', 'matriculas.curso_id', '=', 'cursos.id')
+    .select('cursos.titulo')
+    .count('matriculas.id as total_alunos')
+    .groupBy('cursos.id', 'cursos.titulo')
+    .orderBy('total_alunos', 'desc');
+
+  return await query;
+}
+
+
+
+async function getStudentsPerProfessorRaw() {
+  // Retorna os dados brutos: Professor, Curso e Aluno
+  const query = getDb()('cursos as c')
+    .join('usuarios as p', 'c.professor_id', '=', 'p.id') // Professor
+    .join('matriculas as m', 'c.id', '=', 'm.curso_id') // Matrícula
+    .join('usuarios as a', 'm.aluno_id', '=', 'a.id') // Aluno
+    .select(
+      'p.nome as professor_nome',
+      'c.titulo as curso_titulo',
+      'a.nome as aluno_nome'
+    )
+    .orderBy('p.nome', 'asc')
+    .orderBy('a.nome', 'asc');
+
+  return await query;
+}
+
 module.exports = {
   getCoursePerformance,
   getEnrollmentStatus,
   getGradeDistribution,
-  getCourseAverages
+  getCourseAverages,
+  getDetailedEnrollments,
+  getTotalStudentsPerCourse,
+  getStudentsPerProfessorRaw
 };

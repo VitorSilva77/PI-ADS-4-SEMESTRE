@@ -52,10 +52,19 @@
             <section class="reports-section">
     
                 <div class="report-options">
-                    <button id="btnGenerateReport">Média de cursos</button>
+                    <button id="btnReportDetailedEnrollments" data-report-type="detailedEnrollments">Matrículas Detalhadas</button>
+                    <button id="btnReportCourseAverages" data-report-type="courseAverages">Média de Cursos</button>
+                    <button id="btnReportTotalStudents" data-report-type="totalStudents">Total de Alunos por Curso</button>
+
+                    <button id="btnReportStudentsPerProfessor" data-report-type="studentsPerProfessor">Alunos por Professor</button>
                 </div>
     
-                <div id="report-table-container"
+                <div id="report-actions" style="display: none;">
+                    <button id="btnDownloadReport" class="download-button">
+                        <i class="fa-solid fa-download"></i> Baixar Relatório
+                    </button>
+                </div>
+                <div id="report-table-container">
                 </div>
     
             </section>
