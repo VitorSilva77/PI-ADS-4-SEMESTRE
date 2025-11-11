@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.gstatic.com https://cdnjs.cloudflare.com 'unsafe-inline' 'unsafe-eval'">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="../assets/css/fonts.css">
+    <link rel="stylesheet" href="../assets/css/sidebar.css">
+    <link rel="stylesheet" href="../assets/css/darkmode.css">
+    <link rel="stylesheet" href="../assets/css/tabela-ajax.css">
+    <link rel="stylesheet" href="../assets/css/usuarios.css"> 
+    <title>Usuários - PróFuturo</title>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+          <div class="logo-section">
+              <img src="../assets/images/teste1.png" alt="Logo PróFuturo" class="logo-image">
+              <h2 class="logo">PróFuturo</h2>
+          </div>
+          
+            <div class="itens">
+                <a href="./userPage.html" class="item"><i class="fa-solid fa-house"></i> Início</a>
+                <a href="./perfil.html" class="item"><i class="fa-solid fa-user"></i> Perfil</a>
+                <a href="./usuarios.html" class="item active"><i class="fa-solid fa-users-gear"></i> Usuarios</a>
+                <a href="./cursos.html" class="item"><i class="fa-solid fa-book"></i> Cursos</a>
+                <a href="./relatorios.html" class="item"><i class="fa-solid fa-chart-bar"></i> Relatórios</a>
+                <div class="item theme-switcher">
+                  <i class="fa-solid fa-moon"></i>
+                  <span>Dark Mode</span>
+                  <label class="switch">
+                    <input type="checkbox" id="darkModeToggle">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <button class="logout-button">
+                  <i class="fa-solid fa-right-from-bracket"></i>
+                  <span>Sair</span>
+                </button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <header class="header">
+              <h2>Gestão de Usuários</h2>
+            </header>
+    
+            <section class="user-form-section">
+                <h3 id="form-title">Cadastrar Novo Usuário</h3>
+                <form id="user-form">
+                    <input type="hidden" id="userId">
+                    <div class="form-grid">
+                        <input type="text" id="regNome" placeholder="Nome Completo" required>
+                        <input type="text" id="regFuncional" placeholder="Funcional" required>
+                        <input type="email" id="regEmail" placeholder="Email" required>
+                        <input type="password" id="regPassword" placeholder="Senha (deixe em branco para não alterar)">
+                        <select id="regRole" required>
+                          <option value="" disabled selected>Tipo de Usuário</option>
+                          <option value="TI">Administrador (TI)</option>
+                          <option value="RH">Recursos Humanos (RH)</option>
+                          <option value="Professor">Instrutor (Professor)</option>
+                          <option value="Aluno">Aluno</option>
+                        </select>
+                        <select id="regActive" required>
+                            <option value="true">Ativo</option>
+                            <option value="false">Inativo</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" id="btn-save">Salvar</button>
+                        <button type="button" id="btn-cancel" style="display: none;">Cancelar Edição</button>
+                    </div>
+                    <p id="form-message" style="display: none;"></p>
+                </form>
+            </section>
+
+            <section class="reports-section">
+                <div id="ajax-table-container">
+                    </div>
+            </section>
+        </main>
+    </div>
+  <script src="../js/api.js"></script>
+  <script src="../js/usuarios.js"></script> 
+</body>
+</html>

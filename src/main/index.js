@@ -24,6 +24,10 @@ function registerIpcHandlers() {
 
   // Usuários 
   ipcMain.handle('users:create', userController.handleCreateUser);
+  ipcMain.handle('users:get-all', userController.handleGetAllUsers);    
+  ipcMain.handle('users:get-by-id', userController.handleGetUserById);  
+  ipcMain.handle('users:update', userController.handleUpdateUser);    
+  ipcMain.handle('users:delete', userController.handleDeleteUser);
 
   // Relatórios 
   ipcMain.handle('reports:course-performance', reportController.handleGetCoursePerformance);

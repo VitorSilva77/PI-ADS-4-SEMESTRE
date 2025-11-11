@@ -92,7 +92,7 @@ function applyRBAC(role) {
     document.querySelector('a[href="#relatorios"]')?.closest('a').remove();
   }
   if (!roles.isTI) {
-    document.querySelector('a[href="#configuracoes"]')?.closest('a').remove();
+     document.querySelector('a[href="./usuarios.html"]')?.closest('a').remove();
   }
   
   // --- Seções Principais ---
@@ -124,7 +124,7 @@ async function loadCourseCards() {
 
   try {
     let response;
-    if (currentUser && currentUser.role === 'Professor') {
+    if (currentUser && currentUser.role_name === 'Professor') {
       response = await api.getCoursesByProfessor(currentUser.id);
     } else {
       response = await api.getAllCourses();

@@ -1,0 +1,82 @@
+#ajax-table-container {
+    margin-top: 20px;
+}
+
+#ajax-table-container h2 {
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 1.6em;
+    border-left: 5px solid #ff6b6b; 
+    padding-left: 15px;
+    font-weight: 600;
+}
+
+#ajax-table-container table {
+    width: 100%;
+    border-collapse: separate; 
+    border-spacing: 0;
+    margin-top: 10px;
+    border-radius: 10px; /* Borda mais arredondada */
+    overflow: hidden; 
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#ajax-table-container th,
+#ajax-table-container td {
+    padding: 14px 18px; /* Mais padding */
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0; /* Linhas de separação mais suaves */
+    font-size: 0.95em;
+}
+
+#ajax-table-container thead {
+    background-color: #34495e; /* Azul escuro profissional */
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+#ajax-table-container tbody tr:nth-child(even) {
+    background-color: #f9f9f9; 
+}
+
+#ajax-table-container tbody tr:hover {
+    background-color: #f0f0f0; 
+    transition: background-color 0.2s ease;
+}
+
+#ajax-table-container tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* Estilos para o botão de download */
+.download-button {
+    background: #2ecc71; /* Verde para download */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.download-button:hover {
+    background: #27ae60;
+}
+
+/* Estilo para mensagens de status */
+#report-table-container p {
+    padding: 15px;
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+    border-radius: 6px;
+    font-weight: 500;
+}

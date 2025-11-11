@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const reportButtons = document.querySelectorAll('.report-options button');
-    const tableContainer = document.getElementById('report-table-container');
+    const tableContainer = document.getElementById('ajax-table-container');
     
     let reportData = [];
     let currentReportType = '';

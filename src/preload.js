@@ -47,6 +47,10 @@ const api = {
   
   //usuários
   createUser: (userData) => ipcRenderer.invoke('users:create', userData),
+  getAllUsers: () => ipcRenderer.invoke('users:get-all'), 
+  getUserById: (id) => ipcRenderer.invoke('users:get-by-id', id), 
+  updateUser: (id, userData) => ipcRenderer.invoke('users:update', id, userData), 
+  deleteUser: (id) => ipcRenderer.invoke('users:delete', id), 
 
   //relatórios
   getCoursePerformanceReport: (courseId) => ipcRenderer.invoke('reports:course-performance', courseId),
