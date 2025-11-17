@@ -46,6 +46,7 @@ async function loadPageContent() {
  
   await loadCourseCards();
   await loadDashboardData(null);
+  await loadEnrollmentData();
 }
 
 function attachGlobalListeners() {
@@ -71,6 +72,12 @@ function attachGlobalListeners() {
   if (noticeForm) {
     noticeForm.addEventListener('submit', handleNoticeSubmit);
   }
+
+  const enrollmentForm = document.getElementById('enrollment-form');
+  if (enrollmentForm) {
+    enrollmentForm.addEventListener('submit', handleEnrollmentSubmit);
+  }
+
 }
 
 function renderUserInfo(user) {
@@ -98,6 +105,7 @@ function applyRBAC(role) {
   // --- Seções Principais ---
   if (!roles.isTI) {
     document.querySelector('.registration')?.remove();
+    document.getElementById('enrollment-section')?.remove();
   }
   if (!roles.isTI && !roles.isRH && !roles.isProfessor) {
      document.querySelector('.mural .form-container')?.remove();
@@ -114,7 +122,11 @@ function applyRBAC(role) {
   if (roles.isTI) {
     const area = document.getElementById('area-atribuicao-professores');
     if (area) area.style.display = 'block';
+
+    const enrollSection = document.getElementById('enrollment-section');
+    if (enrollSection) enrollSection.style.display = 'block';
   }
+  
 }
 
 
@@ -250,4 +262,109 @@ async function handleRegistrationSubmit(e) {
     button.disabled = false;
     button.textContent = 'Salvar';
   }
-} 
+}
+
+async function loadEnrollmentData() {
+  const enrollSection = document.getElementById('enrollment-section');
+  
+  if (!enrollSection || enrollSection.style.display === 'none') {
+    return;
+  }
+
+  const courseSelect = document.getElementById('enroll-course-select');
+  const studentSelect = document.getElementById('enroll-student-select');
+  const messageEl = document.getElementById('enroll-message');
+  
+  messageEl.textContent = ''; 
+  messageEl.className = '';
+
+  try {
+    
+    courseSelect.disabled = true;
+    const courseResponse = await api.getAllCourses();
+    
+    if (courseResponse.success) {
+      courseSelect.innerHTML = '<option value="">-- Selecione um curso --</option>'; 
+      courseResponse.data.forEach(course => {
+        courseSelect.innerHTML += `<option value="${course.id}">${course.titulo}</option>`;
+      });
+    } else {
+      courseSelect.innerHTML = '<option value="">Erro ao carregar cursos</option>';
+    }
+
+    // 2. Carregar Alunos Disponíveis
+    studentSelect.disabled = true;
+    const studentResponse = await api.getAvailableStudents();
+    
+    if (studentResponse.success) {
+      studentSelect.innerHTML = '<option value="">-- Selecione um aluno --</option>'; 
+      if (studentResponse.data.length === 0) {
+        studentSelect.innerHTML = '<option value="">Nenhum aluno disponível</option>';
+      } else {
+        studentResponse.data.forEach(student => {
+          studentSelect.innerHTML += `<option value="${student.id}">${student.nome} (Funcional: ${student.funcional || 'N/D'})</option>`;
+        });
+      }
+    } else {
+      studentSelect.innerHTML = '<option value="">Erro ao carregar alunos</option>';
+    }
+    
+  } catch (err) {
+    console.error('Erro ao carregar dados de matrícula:', err);
+    messageEl.textContent = 'Erro de comunicação ao carregar dados.';
+    messageEl.className = 'error';
+  } finally {
+    
+    courseSelect.disabled = false;
+    studentSelect.disabled = false;
+  }
+}
+
+
+async function handleEnrollmentSubmit(e) {
+  e.preventDefault();
+  
+  const courseSelect = document.getElementById('enroll-course-select');
+  const studentSelect = document.getElementById('enroll-student-select');
+  const submitBtn = document.getElementById('enroll-submit-btn');
+  const messageEl = document.getElementById('enroll-message');
+  
+  const curso_id = courseSelect.value;
+  const aluno_id = studentSelect.value;
+
+  if (!curso_id || !aluno_id) {
+    messageEl.textContent = 'Por favor, selecione um curso E um aluno.';
+    messageEl.className = 'error';
+    return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Matriculando...';
+  messageEl.textContent = '';
+  messageEl.className = '';
+
+  try {
+    const response = await api.createEnrollment({ aluno_id, curso_id });
+    
+    if (response.success) {
+      messageEl.textContent = 'Aluno matriculado com sucesso!';
+      messageEl.className = 'success';
+      
+      courseSelect.value = '';
+      
+      await loadEnrollmentData();
+      
+    } else {
+      messageEl.textContent = `Erro: ${response.error}`;
+      messageEl.className = 'error';
+    }
+    
+  } catch (err) {
+    console.error('Erro ao matricular:', err);
+    messageEl.textContent = 'Erro de comunicação ao tentar matricular.';
+    messageEl.className = 'error';
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Matricular';
+  }
+}

@@ -95,14 +95,26 @@
           </div>
         </section>
         
-        <section id="area-criacao-cursos" style="display: none;">
-          <h2>Criação de Novos Cursos</h2>
-          
-        </section>
-
-        <section id="area-atribuicao-professores" style="display: none;">
-          <h2>Atribuição de Professores</h2>
-          
+        <section id="enrollment-section" class="card-section" style="display: none;">
+          <h2 class="section-title">Matricular Aluno em Curso</h2>
+          <form id="enrollment-form" class="enrollment-form">
+            <div class="form-row">
+              <div class="form-group">
+                  <label for="enroll-course-select">Selecione o Curso:</label>
+                  <select id="enroll-course-select" required>
+                      <option value="">Carregando cursos...</option>
+                  </select>
+              </div>
+              <div class="form-group">
+                  <label for="enroll-student-select">Selecione o Aluno Disponível:</label>
+                  <select id="enroll-student-select" required>
+                      <option value="">Carregando alunos...</option>
+                  </select>
+              </div>
+            </div>
+            <button type="submit" id="enroll-submit-btn">Matricular</button>
+            <p id="enroll-message"></p>
+          </form>
         </section>
 
       </main>
