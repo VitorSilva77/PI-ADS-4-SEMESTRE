@@ -67,6 +67,8 @@ const api = {
 
   //matrículas
   createEnrollment: (data) => ipcRenderer.invoke('enrollments:create', data),
+  getEnrollmentsByCourse: (curso_id) => ipcRenderer.invoke('enrollments:get-by-course', curso_id),
+  updateEnrollmentGrade: (data) => ipcRenderer.invoke('enrollments:update-grade', data),
   
 };
 

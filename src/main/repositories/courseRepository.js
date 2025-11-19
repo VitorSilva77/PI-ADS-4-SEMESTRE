@@ -16,8 +16,14 @@ async function findByProfessorId(professorId) {
     .select('*');
 }
 
+async function findById(id) {
+  return getDb()('cursos').where('id', id).first();
+}
+
+
 module.exports = {
   create,
   findAll,
-  findByProfessorId
+  findByProfessorId,
+  findById
 };

@@ -47,6 +47,7 @@ async function loadPageContent() {
   await loadCourseCards();
   await loadDashboardData(null);
   await loadEnrollmentData();
+  await loadGradesCourseData();
 }
 
 function attachGlobalListeners() {
@@ -76,6 +77,21 @@ function attachGlobalListeners() {
   const enrollmentForm = document.getElementById('enrollment-form');
   if (enrollmentForm) {
     enrollmentForm.addEventListener('submit', handleEnrollmentSubmit);
+  }
+
+  const gradesCourseSelect = document.getElementById('grades-course-select');
+  if (gradesCourseSelect) {
+    gradesCourseSelect.addEventListener('change', handleGradesCourseChange);
+  }
+
+  const gradesStudentSelect = document.getElementById('grades-student-select');
+  if (gradesStudentSelect) {
+    gradesStudentSelect.addEventListener('change', handleGradesStudentChange);
+  }
+  
+  const gradesForm = document.getElementById('grades-form');
+  if (gradesForm) {
+    gradesForm.addEventListener('submit', handleGradesFormSubmit);
   }
 
 }
@@ -126,9 +142,13 @@ function applyRBAC(role) {
     const enrollSection = document.getElementById('enrollment-section');
     if (enrollSection) enrollSection.style.display = 'block';
   }
+
+  if (roles.isTI || roles.isProfessor) {
+    const gradesSection = document.getElementById('grades-section');
+    if (gradesSection) gradesSection.style.display = 'block';
+  }
   
 }
-
 
 async function loadCourseCards() {
   const container = document.querySelector('.courses-container');
@@ -179,30 +199,41 @@ async function loadCourseCards() {
 }
 
 function setupCourseSelection() {
-    const courseCards = document.querySelectorAll('.course-card');
+  const courseCards = document.querySelectorAll('.course-card');
+  
+  const gradesCourseSelect = document.getElementById('grades-course-select');
 
-    courseCards.forEach(card => {
-        card.addEventListener('click', () => {
-            const isAlreadySelected = card.classList.contains('selected');
-            
-            courseCards.forEach(c => c.classList.remove('selected'));
+  if (!gradesCourseSelect) return; 
 
-            if (isAlreadySelected) {
-              
-                loadDashboardData(); 
-            } else {
-                card.classList.add('selected');
-                const courseId = card.dataset.courseId;
-                loadDashboardData(courseId);
-            }
-        });
+  courseCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const isAlreadySelected = card.classList.contains('selected');
+      
+      courseCards.forEach(c => c.classList.remove('selected'));
+
+      let selectedCourseId = null;
+
+      if (isAlreadySelected) {
+        loadDashboardData(); 
+          
+        gradesCourseSelect.value = "";
+
+      } else {
+          card.classList.add('selected');
+
+          selectedCourseId = card.dataset.courseId;
+          
+          loadDashboardData(selectedCourseId);
+          
+          gradesCourseSelect.value = selectedCourseId;
+      }
+      gradesCourseSelect.dispatchEvent(new Event('change'));
     });
+
+  });
+
 }
 
-/**
- * Carrega os dados do dashboard 
- * @param {string|null} courseId - O ID do curso para filtrar. Se for nulo, carrega dados de todos os cursos.
- */
 async function loadDashboardData(courseId = null) {
     console.log(`Carregando dados do dashboard para o curso: ${courseId || 'Todos'}`);
 
@@ -292,7 +323,6 @@ async function loadEnrollmentData() {
       courseSelect.innerHTML = '<option value="">Erro ao carregar cursos</option>';
     }
 
-    // 2. Carregar Alunos Disponíveis
     studentSelect.disabled = true;
     const studentResponse = await api.getAvailableStudents();
     
@@ -366,5 +396,183 @@ async function handleEnrollmentSubmit(e) {
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Matricular';
+  }
+}
+
+//Carrega os cursos no dropdown de notas.
+//TI ve todos, professor ve apenas os seus
+async function loadGradesCourseData() {
+  const select = document.getElementById('grades-course-select');
+  if (!select) return;
+
+  select.disabled = true;
+  
+  try {
+    let response;
+    if (currentUser && currentUser.role_name === 'Professor') {
+      response = await api.getCoursesByProfessor(currentUser.id);
+    } else {
+      response = await api.getAllCourses();
+    }
+
+    if (response.success) {
+      select.innerHTML = '<option value="">-- Selecione um curso --</option>'; 
+      response.data.forEach(course => {
+        select.innerHTML += `<option value="${course.id}">${course.titulo}</option>`;
+      });
+    } else {
+      select.innerHTML = '<option value="">Erro ao carregar cursos</option>';
+    }
+  } catch (err) {
+    console.error('Erro ao carregar cursos para notas:', err);
+    select.innerHTML = '<option value="">Erro de comunicação</option>';
+  } finally {
+    select.disabled = false;
+  }
+}
+
+
+//Chamado quando o admin/prof seleciona um curso na seção de notas.
+//Carrega os alunos matriculados nesse curso.
+async function handleGradesCourseChange(e) {
+  const curso_id = e.target.value;
+  const studentSelect = document.getElementById('grades-student-select');
+  const detailsDiv = document.getElementById('grades-details');
+  const messageEl = document.getElementById('grades-message');
+
+  studentSelect.innerHTML = '<option value="">-- Selecione um aluno --</option>';
+  studentSelect.disabled = true;
+  detailsDiv.style.display = 'none';
+  messageEl.textContent = '';
+  
+  if (!curso_id) return;
+
+  studentSelect.innerHTML = '<option value="">Carregando alunos...</option>';
+  
+  try {
+    const response = await api.getEnrollmentsByCourse(curso_id);
+
+    if (response.success) {
+      if (response.data.length === 0) {
+        studentSelect.innerHTML = '<option value="">Nenhum aluno matriculado</option>';
+        return;
+      }
+      
+      studentSelect.innerHTML = '<option value="">-- Selecione um aluno --</option>';
+      response.data.forEach(matricula => {
+        studentSelect.innerHTML += `
+          <option 
+            value="${matricula.id}" 
+            data-status="${matricula.status}" 
+            data-nota="${matricula.nota_final || ''}"
+          >
+            ${matricula.aluno_nome} (Status: ${matricula.status})
+          </option>
+        `;
+      });
+      studentSelect.disabled = false;
+    } else {
+      studentSelect.innerHTML = '<option value="">Erro ao buscar alunos</option>';
+      messageEl.textContent = `Erro: ${response.error}`;
+      messageEl.className = 'error';
+    }
+  } catch (err) {
+    console.error('Erro ao buscar matrículas:', err);
+    studentSelect.innerHTML = '<option value="">Erro de comunicação</option>';
+  }
+}
+
+//Chamado quando um aluno é selecionado
+//Mostra os campos de nota e aplica a lógica de permissão 
+function handleGradesStudentChange(e) {
+  const detailsDiv = document.getElementById('grades-details');
+  const noteInput = document.getElementById('grades-note-input');
+  const statusInfo = document.getElementById('grades-status-info');
+  const submitBtn = document.getElementById('grades-submit-btn');
+
+  const selectedOption = e.target.options[e.target.selectedIndex];
+  if (!selectedOption || !e.target.value) {
+    detailsDiv.style.display = 'none';
+    return;
+  }
+
+  const status = selectedOption.dataset.status;
+  const nota = selectedOption.dataset.nota;
+
+  noteInput.value = nota;
+  detailsDiv.style.display = 'flex';
+
+  if (status === 'cursando') {
+    statusInfo.textContent = 'Este aluno está "Cursando". Ao salvar, o status mudará para "Concluído".';
+    submitBtn.textContent = 'Concluir Aluno';
+    noteInput.disabled = false;
+    submitBtn.disabled = false;
+  } 
+  else if (status === 'concluido') {
+    statusInfo.textContent = 'Este aluno já concluiu o curso.';
+    submitBtn.textContent = 'Atualizar Nota';
+    
+    if (currentUser.role_name === 'TI') {
+      noteInput.disabled = false;
+      submitBtn.disabled = false;
+    } else {
+      noteInput.disabled = true;
+      submitBtn.disabled = true;
+      statusInfo.textContent += ' (Apenas TI pode editar notas de alunos concluídos)';
+    }
+  }
+}
+
+async function handleGradesFormSubmit(e) {
+  e.preventDefault();
+
+  const studentSelect = document.getElementById('grades-student-select');
+  const noteInput = document.getElementById('grades-note-input');
+  const submitBtn = document.getElementById('grades-submit-btn');
+  const messageEl = document.getElementById('grades-message');
+
+  const enrollment_id = studentSelect.value;
+  const nota_final = noteInput.value;
+
+  if (!enrollment_id || nota_final === '') {
+    messageEl.textContent = 'Selecione um aluno e insira uma nota.';
+    messageEl.className = 'error';
+    return;
+  }
+  
+  const notaNum = parseFloat(nota_final);
+  if (notaNum < 0 || notaNum > 10) {
+      messageEl.textContent = 'A nota deve ser entre 0 e 10.';
+      messageEl.className = 'error';
+      return;
+  }
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Salvando...';
+  messageEl.textContent = '';
+  messageEl.className = '';
+
+  try {
+    const response = await api.updateEnrollmentGrade({ enrollment_id, nota_final: notaNum });
+
+    if (response.success) {
+      messageEl.textContent = 'Nota salva com sucesso!';
+      messageEl.className = 'success';
+
+      document.getElementById('grades-details').style.display = 'none';
+
+      await handleGradesCourseChange({ target: document.getElementById('grades-course-select') });
+
+    } else {
+      messageEl.textContent = `Erro: ${response.error}`;
+      messageEl.className = 'error';
+    }
+
+  } catch (err) {
+    console.error('Erro ao salvar nota:', err);
+    messageEl.textContent = 'Erro de comunicação ao salvar.';
+    messageEl.className = 'error';
+  } finally {
+    submitBtn.disabled = false;
   }
 }

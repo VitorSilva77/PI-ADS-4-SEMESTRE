@@ -95,3 +95,7 @@
     cursor: pointer;
     margin-bottom: 20px;
 }
+
+.ti-only {
+    display: none !important;
+}

@@ -36,8 +36,37 @@ async function create(aluno_id, curso_id) {
   return getDb()('matriculas').where('id', newId).first();
 }
 
+
+async function findById(id) {
+  return getDb()('matriculas').where('id', id).first();
+}
+
+
+async function findByCourse(curso_id) {
+  return getDb()('matriculas as m')
+    .join('usuarios as u', 'm.aluno_id', '=', 'u.id')
+    .where('m.curso_id', curso_id)
+    .select(
+      'm.id', 
+      'm.aluno_id',
+      'u.nome as aluno_nome',
+      'm.status',
+      'm.nota_final'
+    )
+    .orderBy('u.nome', 'asc');
+}
+
+
+async function update(id, data) {
+  await getDb()('matriculas').where('id', id).update(data);
+  return findById(id);
+}
+
 module.exports = {
   findByStudentAndCourse,
   findActiveByStudent,
-  create
+  create,
+  findById,
+  findByCourse,
+  update
 };

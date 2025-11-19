@@ -43,6 +43,8 @@ function registerIpcHandlers() {
 
   // Matrículas 
   ipcMain.handle('enrollments:create', enrollmentController.handleCreateEnrollment);
+  ipcMain.handle('enrollments:get-by-course', enrollmentController.handleGetEnrollmentsByCourse);
+  ipcMain.handle('enrollments:update-grade', enrollmentController.handleUpdateEnrollmentGrade);
 }
 
 function createWindow() {
