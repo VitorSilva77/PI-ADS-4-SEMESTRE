@@ -1,6 +1,12 @@
 let currentAttendanceChart = null; 
 let currentPerformanceChart = null; 
-let currentProgressChart = null; 
+let currentProgressChart = null;
+
+function getThemeColors() {
+  const isDarkMode = document.body.classList.contains('dark-mode');
+  return { text: isDarkMode ? '#e0e0e0' : '#666',
+            grid: isDarkMode ? 'rgba (255,255,255,0.1)' : 'rgba (0,0,0,0.1)' };
+   };
 
 async function loadGradeDistributionChart(courseId = null) {
   const performanceCtx = document.getElementById('performanceChart');
@@ -29,7 +35,9 @@ async function loadGradeDistributionChart(courseId = null) {
           }
         });
         if (courseId) {
-          chartTitle = 'Distribuição de Notas (Curso Selecionado)';
+          const card = document.querySelector(`.course-card[data-course-id="${courseId}"] h4`);
+          const courseName = card ? card.textContent : 'Curso Selecionado';
+          chartTitle = `Distribuição de Notas (${courseName})`;
         }
       } else {
         chartTitle = courseId ? 'Sem notas neste curso' : 'Nenhuma nota registrada';
@@ -46,6 +54,7 @@ async function loadGradeDistributionChart(courseId = null) {
   }
 
   const chartData = labels.map(label => dataMap.get(label));
+  const ThemeColors = getThemeColors();
 
   currentPerformanceChart = new Chart(performanceCtx, {
     type: 'bar',
@@ -62,14 +71,32 @@ async function loadGradeDistributionChart(courseId = null) {
       plugins: {
         title: {
           display: true,
-          text: chartTitle
+          text: chartTitle,
+          color: ThemeColors.text
+        },
+        legend: { 
+          labels : { 
+            color: ThemeColors.text 
+          }
         }
       },
       scales: {
         y: {
           beginAtZero: true,
           ticks: {
-            precision: 0
+            precision: 0,
+            color: ThemeColors.text
+          },
+          grid: {
+            color: ThemeColors.grid
+          }
+        },
+        x: {
+          ticks: {
+            color: ThemeColors.text
+          },
+          grid: {
+            color: ThemeColors.grid
           }
         }
       }
@@ -130,3 +157,47 @@ async function loadEnrollmentStatusChart(courseId = null) {
     }
   });
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+  const darkModeToggle = document.getElementById('darkModeToggle');
+
+  if (darkModeToggle) {
+    darkModeToggle.addEventListener('change', () => {
+
+      setTimeout(() => {
+
+        //text define a cor do texto
+        //grid define a cor da linha do grid
+        //primeiro passa a cor da versão clara : versao darkmode
+        const isDark = document.body.classList.contains('dark-mode');
+        const themeColors = {
+          text: isDark ? '#e0e0e0' : '#666', 
+          grid: isDark ? 'rgba(255, 255, 255, 0.1)' : '#666' 
+        };
+
+        if (currentPerformanceChart) {
+
+          if (currentPerformanceChart.options.plugins.title) {
+             currentPerformanceChart.options.plugins.title.color = themeColors.text;
+          }
+          if (currentPerformanceChart.options.plugins.legend) {
+             currentPerformanceChart.options.plugins.legend.labels.color = themeColors.text;
+          }
+
+          if (currentPerformanceChart.options.scales.x) {
+            currentPerformanceChart.options.scales.x.ticks.color = themeColors.text;
+            currentPerformanceChart.options.scales.x.grid.color = themeColors.grid;
+          }
+
+          if (currentPerformanceChart.options.scales.y) {
+            currentPerformanceChart.options.scales.y.ticks.color = themeColors.text;
+            currentPerformanceChart.options.scales.y.grid.color = themeColors.grid;
+          }
+
+          currentPerformanceChart.update();
+        }
+
+      }, 50); 
+    });
+  }
+});

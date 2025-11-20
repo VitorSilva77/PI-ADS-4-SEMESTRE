@@ -79,20 +79,50 @@ body {
 .courses {
     margin-bottom: 20px;
 }
+
 .courses-container {
     display: flex;
-    flex-direction: wrap;
+    flex-direction: row;  
+    flex-wrap: nowrap;    
     gap: 20px;
+    overflow-x: auto;     
+    padding: 10px 5px 20px 5px; 
+    scroll-behavior: smooth;    
+    width: 100%;
+    align-items: flex-start; 
 }
+
 .course-card {
     background: white;
     padding: 20px;
     border-radius: 8px;
     text-align: center;
-    width: 220px;
+    width: 220px;         
+    min-width: 220px;     
+    flex-shrink: 0;       
+    flex-grow: 0;         
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
     cursor: pointer;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+
+.courses-container::-webkit-scrollbar {
+    height: 8px; 
+}
+
+.courses-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.courses-container::-webkit-scrollbar-thumb {
+    background: #ccc; 
+    border-radius: 10px;
+}
+
+.courses-container::-webkit-scrollbar-thumb:hover {
+    background: rgb(255, 71, 20); 
 }
 
 .course-card:hover {
@@ -478,7 +508,6 @@ body {
     }
     
     .registration form {
-        flex-direction: column;
+        flex-direction:column;
     }
 }
-
