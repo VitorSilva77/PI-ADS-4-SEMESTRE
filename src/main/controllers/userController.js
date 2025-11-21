@@ -45,10 +45,10 @@ async function handleDeleteUser(event, id) {
   }
 }
 
-async function handleGetAvailableStudents() {
+async function handleGetAllProfessors() {
   try {
-    const users = await userService.getAvailableStudents();
-    return { success: true, data: users };
+    const professors = await userService.getAllProfessors();
+    return { success: true, data: professors };
   } catch (error) {
     return { success: false, error: error.message };
   }
@@ -60,5 +60,5 @@ module.exports = {
   handleGetUserById,
   handleUpdateUser,
   handleDeleteUser,
-  handleGetAvailableStudents
+  handleGetAllProfessors
 };

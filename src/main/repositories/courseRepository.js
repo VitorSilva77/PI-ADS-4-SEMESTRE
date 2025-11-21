@@ -16,14 +16,13 @@ async function findByProfessorId(professorId) {
     .select('*');
 }
 
-async function findById(id) {
-  return getDb()('cursos').where('id', id).first();
+async function update(id, courseData) {
+  return getDb()('cursos').where('id', id).update(courseData);
 }
-
 
 module.exports = {
   create,
   findAll,
   findByProfessorId,
-  findById
+  update
 };

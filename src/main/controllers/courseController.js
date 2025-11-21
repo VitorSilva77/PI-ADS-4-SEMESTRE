@@ -18,6 +18,15 @@ async function handleCreateCourse(event, courseData) {
   }
 }
 
+async function handleUpdateCourse(event, courseId, courseData) {
+  try {
+    const updatedCourse = await courseService.updateCourse(courseId, courseData);
+    return { success: true, data: updatedCourse };
+  } catch (error) {
+    return { success: false, error: error.message };
+  }
+}
+
 const getCoursesByProfessor = async (event, professorId) => {
   try {
     const courses = await courseService.findCoursesByProfessor(professorId);
@@ -31,5 +40,6 @@ const getCoursesByProfessor = async (event, professorId) => {
 module.exports = {
   handleGetAllCourses,
   handleCreateCourse,
+  handleUpdateCourse,
   getCoursesByProfessor
 };

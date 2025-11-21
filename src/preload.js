@@ -44,15 +44,15 @@ const api = {
    * @returns {Promise<{success: boolean, data?: object, error?: string}>}
    */
   createCourse: (courseData) => ipcRenderer.invoke('courses:create', courseData),
+  updateCourse: (courseId, courseData) => ipcRenderer.invoke('courses:update', courseId, courseData),
   
   //usuários
   createUser: (userData) => ipcRenderer.invoke('users:create', userData),
   getAllUsers: () => ipcRenderer.invoke('users:get-all'), 
   getUserById: (id) => ipcRenderer.invoke('users:get-by-id', id), 
   updateUser: (id, userData) => ipcRenderer.invoke('users:update', id, userData), 
-  deleteUser: (id) => ipcRenderer.invoke('users:delete', id),
-  getAvailableStudents: () => ipcRenderer.invoke('users:get-available-students'), 
-
+  deleteUser: (id) => ipcRenderer.invoke('users:delete', id), 
+  getAllProfessors: () => ipcRenderer.invoke('users:get-professors'),
   //relatórios
   getCoursePerformanceReport: (courseId) => ipcRenderer.invoke('reports:course-performance', courseId),
   getEnrollmentStatusReport: (courseId) => ipcRenderer.invoke('reports:enrollment-status', courseId),
@@ -64,11 +64,6 @@ const api = {
   getStudentsPerProfessorReport: () => ipcRenderer.invoke('reports:students-per-professor'),
   //auditoria
   getAuditLogs: () => ipcRenderer.invoke('audit:get-logs'),
-
-  //matrículas
-  createEnrollment: (data) => ipcRenderer.invoke('enrollments:create', data),
-  getEnrollmentsByCourse: (curso_id) => ipcRenderer.invoke('enrollments:get-by-course', curso_id),
-  updateEnrollmentGrade: (data) => ipcRenderer.invoke('enrollments:update-grade', data),
   
 };
 

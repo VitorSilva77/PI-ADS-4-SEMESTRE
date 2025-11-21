@@ -7,6 +7,12 @@ if (!api) {
   );
   alert('Erro de inicialização. A aplicação não pode continuar.');
 }
+
+// Funções de API para Cursos
+api.updateCourse = (courseId, courseData) => {
+  return window.api.invoke('courses:update', courseId, courseData);
+};
+
 function initializeThemeSwitcher() {
     const darkModeToggle = document.getElementById('darkModeToggle');
     const body = document.body;
@@ -27,27 +33,4 @@ function initializeThemeSwitcher() {
     darkModeToggle.addEventListener('change', applyTheme);
 }
 
-function checkSidebarPermissions() {
-    try {
-        const storedUser = localStorage.getItem('profuturo_currentUser');
-        if (!storedUser) return;
-
-        const user = JSON.parse(storedUser);
-
-        if (user.role_name === 'TI') {
-            const restrictedItems = document.querySelectorAll('.ti-only');
-            restrictedItems.forEach(item => {
-                item.classList.remove('ti-only'); 
-                item.style.display = 'flex';
-            });
-        }
-
-    } catch (error) {
-        console.error('Erro ao aplicar permissões da sidebar:', error);
-    }
-}
-
-document.addEventListener('DOMContentLoaded', () => {
-    initializeThemeSwitcher();
-    checkSidebarPermissions(); 
-});
+document.addEventListener('DOMContentLoaded', initializeThemeSwitcher);

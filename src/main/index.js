@@ -9,7 +9,6 @@ const authController = require('./controllers/authController');
 const courseController = require('./controllers/courseController');
 const userController = require('./controllers/userController'); 
 const reportController = require('./controllers/reportController'); 
-const enrollmentController = require('./controllers/enrollmentController');
 
 function registerIpcHandlers() {
   // Autenticação
@@ -22,6 +21,7 @@ function registerIpcHandlers() {
   ipcMain.handle('courses:get-all', courseController.handleGetAllCourses);
   ipcMain.handle('courses:getByProfessor', courseController.getCoursesByProfessor);
   ipcMain.handle('courses:create', courseController.handleCreateCourse);
+  ipcMain.handle('courses:update', courseController.handleUpdateCourse);
 
   // Usuários 
   ipcMain.handle('users:create', userController.handleCreateUser);
@@ -29,7 +29,7 @@ function registerIpcHandlers() {
   ipcMain.handle('users:get-by-id', userController.handleGetUserById);  
   ipcMain.handle('users:update', userController.handleUpdateUser);    
   ipcMain.handle('users:delete', userController.handleDeleteUser);
-  ipcMain.handle('users:get-available-students', userController.handleGetAvailableStudents);
+  ipcMain.handle('users:get-professors', userController.handleGetAllProfessors);
 
   // Relatórios 
   ipcMain.handle('reports:course-performance', reportController.handleGetCoursePerformance);
@@ -40,11 +40,6 @@ function registerIpcHandlers() {
   ipcMain.handle('reports:total-students-per-course', reportController.handleGetTotalStudentsPerCourse);
 
   ipcMain.handle('reports:students-per-professor', reportController.handleGetStudentsPerProfessor);
-
-  // Matrículas 
-  ipcMain.handle('enrollments:create', enrollmentController.handleCreateEnrollment);
-  ipcMain.handle('enrollments:get-by-course', enrollmentController.handleGetEnrollmentsByCourse);
-  ipcMain.handle('enrollments:update-grade', enrollmentController.handleUpdateEnrollmentGrade);
 }
 
 function createWindow() {
