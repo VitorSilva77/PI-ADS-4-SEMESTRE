@@ -62,7 +62,7 @@ function createWindow() {
 
   mainWindow.loadFile(path.join(__dirname, '../renderer/views/index.html'));
   
-  mainWindow.webContents.openDevTools();
+  //mainWindow.webContents.openDevTools(); descomentar para abrir o DevTools automaticamente
 }
 
 // Ciclo de vida da aplicação

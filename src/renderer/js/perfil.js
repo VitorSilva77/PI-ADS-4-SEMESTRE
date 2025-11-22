@@ -40,19 +40,16 @@ document.addEventListener('DOMContentLoaded', () => {
         const newPassword = newPasswordInput.value;
         const confirmPassword = confirmPasswordInput.value;
 
-        showPasswordMessage('', 'success'); 
-
         if (!newPassword || !confirmPassword) {
-            showPasswordMessage('Por favor, preencha ambos os campos de senha.', 'error');
+            alert('Por favor, preencha ambos os campos de senha.'); 
             return;
         }
         if (newPassword !== confirmPassword) {
-            showPasswordMessage('As senhas não coincidem.', 'error');
+            alert('As senhas não coincidem.');
             return;
         }
         if (newPassword.length < 6) {
-
-            showPasswordMessage('A senha deve ter pelo menos 6 caracteres.', 'error');
+            alert('A senha deve ter pelo menos 6 caracteres.');
             return;
         }
 
@@ -61,29 +58,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             const userId = currentUser.id;
-
             const userData = { password: newPassword };
 
             const response = await window.api.updateUser(userId, userData);
 
             if (response.success) {
-                showPasswordMessage('Senha atualizada com sucesso!', 'success');
+                alert('Senha atualizada com sucesso!');
                 passwordForm.reset(); 
             } else {
-                showPasswordMessage(`Erro ao atualizar: ${response.error}`, 'error');
+                alert(`Erro ao atualizar: ${response.error}`);
             }
         } catch (err) {
             console.error('Erro ao redefinir senha:', err);
-            showPasswordMessage(`Erro de comunicação: ${err.message}`, 'error');
+            alert(`Erro de comunicação: ${err.message}`);
         } finally {
             savePasswordBtn.disabled = false;
             savePasswordBtn.textContent = 'Redefinir Senha';
         }
-    }
-
-    function showPasswordMessage(message, type = 'error') {
-        passwordMessage.textContent = message;
-        passwordMessage.className = type; 
     }
 
     passwordForm.addEventListener('submit', handlePasswordSubmit);

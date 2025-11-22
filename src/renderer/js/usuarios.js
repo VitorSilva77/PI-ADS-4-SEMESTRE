@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 : await window.api.createUser(userData);   
 
             if (response.success) {
-                showFormMessage('Usuário salvo com sucesso!', 'success');
+                await showFormMessage('Usuário salvo com sucesso!', 'success');
                 resetForm();
                 await loadUsers(); 
             } else {

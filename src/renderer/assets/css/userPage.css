@@ -448,12 +448,27 @@ body {
     margin-bottom: 5px;
     font-weight: 500;
 }
-
+.enrollment-form input,
 .enrollment-form select {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 6px;
-    background: white;
+    background: white; 
+    color: #333;
+    width: 100%; 
+    font-size: 1em;
+    height: 42px;
+}
+
+.enrollment-form input:focus,
+.enrollment-form select:focus {
+    border-color: #ff6600; 
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2);
+}
+
+#grades-note-input {
+    box-sizing: border-box;
 }
 
 .enrollment-form button {

@@ -260,6 +260,19 @@ document.addEventListener('DOMContentLoaded', () => {
             const courseDescription = document.getElementById('courseDescription').value;
             const courseWorkload = parseInt(document.getElementById('courseWorkload').value, 10);
             const professorId = parseInt(document.getElementById('professorId').value, 10);
+            const imageInput = document.getElementById('courseImage');
+            const file = imageInput.files[0];
+
+            let imageData = null;
+
+            if (file) {
+                const buffer = await file.arrayBuffer();
+                imageData = {
+                    name: file.name,
+                    type: file.type,
+                    buffer: buffer 
+                };
+            }
 
             if (!courseName || !courseDescription || isNaN(courseWorkload) || courseWorkload <= 0 || isNaN(professorId)) {
                 formMessage.textContent = 'Por favor, preencha todos os campos corretamente.';
@@ -273,7 +286,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 descricao: courseDescription,
                 carga_horaria: courseWorkload,
                 professor_id: professorId,
-
+                image: imageData 
             };
 
             try {

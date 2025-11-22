@@ -355,7 +355,6 @@ async function loadEnrollmentData() {
   }
 }
 
-
 async function handleEnrollmentSubmit(e) {
   e.preventDefault();
   
@@ -367,37 +366,33 @@ async function handleEnrollmentSubmit(e) {
   const curso_id = courseSelect.value;
   const aluno_id = studentSelect.value;
 
+  messageEl.textContent = ''; 
+
   if (!curso_id || !aluno_id) {
-    messageEl.textContent = 'Por favor, selecione um curso E um aluno.';
-    messageEl.className = 'error';
+    alert('Por favor, selecione um curso E um aluno.'); 
     return;
   }
 
   submitBtn.disabled = true;
   submitBtn.textContent = 'Matriculando...';
-  messageEl.textContent = '';
-  messageEl.className = '';
 
   try {
     const response = await api.createEnrollment({ aluno_id, curso_id });
     
     if (response.success) {
-      messageEl.textContent = 'Aluno matriculado com sucesso!';
-      messageEl.className = 'success';
+      alert('Aluno matriculado com sucesso!'); 
       
       courseSelect.value = '';
-      
       await loadEnrollmentData();
       
     } else {
-      messageEl.textContent = `Erro: ${response.error}`;
-      messageEl.className = 'error';
+      alert(`Erro: ${response.error}`);
     }
     
   } catch (err) {
     console.error('Erro ao matricular:', err);
-    messageEl.textContent = 'Erro de comunicação ao tentar matricular.';
-    messageEl.className = 'error';
+
+    alert('Erro de comunicação ao tentar matricular.');
   } finally {
     submitBtn.disabled = false;
     submitBtn.textContent = 'Matricular';
@@ -534,50 +529,47 @@ async function handleGradesFormSubmit(e) {
   const studentSelect = document.getElementById('grades-student-select');
   const noteInput = document.getElementById('grades-note-input');
   const submitBtn = document.getElementById('grades-submit-btn');
-  const messageEl = document.getElementById('grades-message');
+  const messageEl = document.getElementById('grades-message'); 
 
   const enrollment_id = studentSelect.value;
   const nota_final = noteInput.value;
 
+ 
+  messageEl.textContent = '';
+
   if (!enrollment_id || nota_final === '') {
-    messageEl.textContent = 'Selecione um aluno e insira uma nota.';
-    messageEl.className = 'error';
+    alert('Selecione um aluno e insira uma nota.'); 
     return;
   }
   
   const notaNum = parseFloat(nota_final);
   if (notaNum < 0 || notaNum > 10) {
-      messageEl.textContent = 'A nota deve ser entre 0 e 10.';
-      messageEl.className = 'error';
+      alert('A nota deve ser entre 0 e 10.'); 
       return;
   }
 
   submitBtn.disabled = true;
   submitBtn.textContent = 'Salvando...';
-  messageEl.textContent = '';
-  messageEl.className = '';
 
   try {
     const response = await api.updateEnrollmentGrade({ enrollment_id, nota_final: notaNum });
 
     if (response.success) {
-      messageEl.textContent = 'Nota salva com sucesso!';
-      messageEl.className = 'success';
+      alert('Nota salva com sucesso!');
 
       document.getElementById('grades-details').style.display = 'none';
 
       await handleGradesCourseChange({ target: document.getElementById('grades-course-select') });
 
     } else {
-      messageEl.textContent = `Erro: ${response.error}`;
-      messageEl.className = 'error';
+      alert(`Erro: ${response.error}`);
     }
 
   } catch (err) {
     console.error('Erro ao salvar nota:', err);
-    messageEl.textContent = 'Erro de comunicação ao salvar.';
-    messageEl.className = 'error';
+    alert('Erro de comunicação ao salvar.');
   } finally {
     submitBtn.disabled = false;
+    submitBtn.textContent = 'Salvar' ;
   }
 }

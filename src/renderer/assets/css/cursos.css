@@ -298,3 +298,34 @@ body {
     justify-content: space-between;
     align-items: center;
 }
+
+.create-course-form input[type="file"] {
+    padding: 8px;
+    background: #f9f9f9;
+    border: 1px dashed #ccc; 
+    border-radius: 6px;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.create-course-form input[type="file"]:hover {
+    border-color: #ff6600;
+    background: #fff5f0; 
+}
+
+.create-course-form input[type="file"]::file-selector-button {
+    margin-right: 15px;
+    border: none;
+    background: #ff6600; 
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: white;
+    cursor: pointer;
+    font-family: 'poppinsmedium', sans-serif; 
+    transition: background 0.3s ease;
+}
+
+.create-course-form input[type="file"]::file-selector-button:hover {
+    background: #e05a00;    
+}
