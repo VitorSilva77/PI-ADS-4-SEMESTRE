@@ -74,22 +74,10 @@ async function remove(id) {
   return getDb()('usuarios').where('id', id).delete();
 }
 
-async function findAvailableStudents() {
-  const role = await getDb()('roles').where('nome', 'Aluno').first();
-  if (!role) {
-    throw new Error('Role "Aluno" não encontrada.');
-  }
-
-  // Pega os IDs de todos os alunos que estão 'cursando' algo
-  const busyStudentIds = getDb()('matriculas')
-    .select('aluno_id')
-    .where('status', 'cursando');
-
-  // Retorna todos os usuários 'Aluno' e não 'cursando'
+async function findAllProfessors() {
   return getDb()('usuarios')
-    .select('id', 'nome', 'funcional')
-    .where('role_id', role.id)
-    .whereNotIn('id', busyStudentIds) 
+    .where('role_id', 3) // 3 é o ID da role 'Professor'
+    .select('id', 'nome')
     .orderBy('nome', 'asc');
 }
 
@@ -98,8 +86,8 @@ module.exports = {
   findByFuncional,
   findById,
   findAll,
+  findAllProfessors,
   create,
   update,
-  remove,
-  findAvailableStudents
+  remove
 };

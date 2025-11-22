@@ -27,6 +27,33 @@ async function createCourse(courseData) {
   return newCourse;
 }
 
+async function updateCourse(courseId, courseData) {
+  const user = getCurrentUser();
+  if (!user) {
+    throw new Error('Não autenticado.');
+  }
+
+  checkRole(user.role_name, [ROLES.TI, ROLES.RH]);
+
+  if (!courseId) {
+    throw new Error('ID do curso é obrigatório.');
+  }
+
+  if (!courseData.titulo) {
+    throw new Error('O título do curso é obrigatório.');
+  }
+
+  const updatedRows = await courseRepository.update(courseId, courseData);
+
+  if (updatedRows === 0) {
+    throw new Error('Curso não encontrado ou nenhum dado para atualizar.');
+  }
+
+  await auditService.log(user.id, 'UPDATE_COURSE', 'cursos', courseId, { ...courseData });
+  
+  return { id: courseId, ...courseData };
+}
+
 async function findCoursesByProfessor(professorId) {
     if (!professorId) {
       throw new Error('ID do professor é obrigatório.');
@@ -37,5 +64,6 @@ async function findCoursesByProfessor(professorId) {
 module.exports = {
   getAllCourses,
   createCourse,
+  updateCourse,
   findCoursesByProfessor
 };

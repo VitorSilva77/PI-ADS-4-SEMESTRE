@@ -51,7 +51,7 @@ async function createUser(userData) {
   };
   const newUser = await userRepository.create(dbData);
 
-  //Log auditoria
+  //Loga auditoria
   await auditService.log(currentUser.id, 'CREATE_USER', 'usuarios', newUser.id, { email: newUser.email, role: roleName });
   
   //Retorna usuário (sem o hash)
@@ -120,6 +120,17 @@ async function updateUser(id, userData) {
   return updatedUser;
 }
 
+async function getAllProfessors() {
+  const currentUser = getCurrentUser();
+  if (!currentUser) throw new Error('Não autenticado.');
+  // Restringindo a busca de professores para quem pode criar curso
+  checkRole(currentUser.role_name, [ROLES.TI, ROLES.RH]); 
+
+  const professors = await userRepository.findAllProfessors();
+
+  return professors;
+}
+
 async function deleteUser(id) {
   const currentUser = getCurrentUser();
   if (!currentUser) throw new Error('Não autenticado.');
@@ -138,19 +149,11 @@ async function deleteUser(id) {
   return { success: true, message: 'Usuário excluído.' };
 }
 
-async function getAvailableStudents() {
-  const currentUser = getCurrentUser();
-  if (!currentUser) throw new Error('Não autenticado.');
-  checkRole(currentUser.role_name, [ROLES.TI]); 
-
-  return userRepository.findAvailableStudents();
-}
-
 module.exports = {
   createUser,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
-  getAvailableStudents
+  getAllProfessors
 };
