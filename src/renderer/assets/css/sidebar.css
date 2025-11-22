@@ -99,3 +99,18 @@
 .ti-only {
     display: none !important;
 }
+
+.item > img {
+    width: 30px;
+    height: auto;
+}
+
+.logout-button > img {
+    width: 30px;
+    height: auto;
+}
+
+.search-bar > img {
+    width: 20px;
+    height: auto;
+}
