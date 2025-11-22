@@ -8,6 +8,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (storedUser) {
       currentUser = JSON.parse(storedUser); 
+
+      if (currentUser.role_name === 'Aluno') {
+          window.location.href = 'unavailable.html';
+          return; 
+      }
  
       if (!currentUser || !currentUser.id) { 
         console.warn('USERPAGE.JS: Sessão encontrada, mas inválida. Limpando.');

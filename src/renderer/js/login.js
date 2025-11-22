@@ -7,14 +7,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const user = JSON.parse(storedUser);
 
         if (user && user.id) {
-          console.log('LOGIN.JS: Sessão ativa encontrada. Redirecionando para userPage...');
-          window.location.href = '../views/userPage.html';
-        } else {
+          console.log('LOGIN.JS: Sessão ativa encontrada.');
+          
+          if (user.role_name === 'Aluno') {
+             window.location.href = '../views/unavailable.html';
+          } else {
+             window.location.href = '../views/userPage.html';
+          }
 
+        } else {
           localStorage.removeItem('profuturo_currentUser');
         }
       }
-
     } catch (e) {
       console.warn('Limpando sessão corrompida do localStorage.');
       localStorage.removeItem('profuturo_currentUser');
@@ -22,7 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   })();
 
   const loginForm = document.getElementById('login-form');
-  const funcionalInput = document.getElementById('text');
+  const funcionalInput = document.getElementById('text'); 
   const passwordInput = document.getElementById('password');
   const errorMessage = document.getElementById('login-error-message');
 
@@ -41,13 +45,17 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await api.login({ funcional, password });
 
       if (response.success) {
-        console.log('LOGIN.JS: Login bem-sucedido, dados do usuário:', response.user);
+        console.log('LOGIN.JS: Login bem-sucedido', response.user);
 
         const userString = JSON.stringify(response.user);
         localStorage.setItem('profuturo_currentUser', userString);
 
-        console.log('LOGIN.JS: Usuário salvo no localStorage:', userString);
-        window.location.href = '../views/userPage.html';
+        if (response.user.role_name === 'Aluno') {
+            window.location.href = '../views/unavailable.html';
+        } else {
+            window.location.href = '../views/userPage.html';
+        }
+
       } else {
         showError(response.error || 'Credenciais inválidas.');
       }
