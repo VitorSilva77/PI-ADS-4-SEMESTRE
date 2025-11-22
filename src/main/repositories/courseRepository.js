@@ -20,7 +20,12 @@ async function update(id, courseData) {
   return getDb()('cursos').where('id', id).update(courseData);
 }
 
+async function findById(id) {
+  return getDb()('cursos').where('id', id).first();
+}
+
 module.exports = {
+  findById,
   create,
   findAll,
   findByProfessorId,

@@ -123,7 +123,6 @@ async function updateUser(id, userData) {
 async function getAllProfessors() {
   const currentUser = getCurrentUser();
   if (!currentUser) throw new Error('Não autenticado.');
-  // Restringindo a busca de professores para quem pode criar curso
   checkRole(currentUser.role_name, [ROLES.TI, ROLES.RH]); 
 
   const professors = await userRepository.findAllProfessors();
@@ -149,11 +148,20 @@ async function deleteUser(id) {
   return { success: true, message: 'Usuário excluído.' };
 }
 
+async function getAvailableStudents()
+{
+  const currentUser = getCurrentUser();
+  if (!currentUser) throw new Error('Não autenticado.');
+  checkRole(currentUser.role_name, [ROLES.TI]);
+  return userRepository.findAvailableStudents(); //se bugar taca await
+}
+
 module.exports = {
   createUser,
   getAllUsers,
   getUserById,
   updateUser,
   deleteUser,
-  getAllProfessors
+  getAllProfessors,
+  getAvailableStudents
 };

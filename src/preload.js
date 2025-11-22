@@ -53,6 +53,8 @@ const api = {
   updateUser: (id, userData) => ipcRenderer.invoke('users:update', id, userData), 
   deleteUser: (id) => ipcRenderer.invoke('users:delete', id), 
   getAllProfessors: () => ipcRenderer.invoke('users:get-professors'),
+  getAvailableStudents: () => ipcRenderer.invoke('users:get-available-students'),
+
   //relatórios
   getCoursePerformanceReport: (courseId) => ipcRenderer.invoke('reports:course-performance', courseId),
   getEnrollmentStatusReport: (courseId) => ipcRenderer.invoke('reports:enrollment-status', courseId),
@@ -62,8 +64,14 @@ const api = {
   getTotalStudentsPerCourseReport: () => ipcRenderer.invoke('reports:total-students-per-course'),
 
   getStudentsPerProfessorReport: () => ipcRenderer.invoke('reports:students-per-professor'),
+
   //auditoria
   getAuditLogs: () => ipcRenderer.invoke('audit:get-logs'),
+
+  //Matriculas
+  createEnrollment: (enrollmentData) => ipcRenderer.invoke('enrollments:create', enrollmentData),
+  getEnrollmentsByCourse: (courseId) => ipcRenderer.invoke('enrollments:get-by-course', courseId),
+  updateEnrollmentGrade: (enrollmentId, grade) => ipcRenderer.invoke('enrollments:update-grade', enrollmentId, grade),
   
 };
 

@@ -81,6 +81,22 @@ async function findAllProfessors() {
     .orderBy('nome', 'asc');
 }
 
+async function findAvailableStudents() {
+  const role = await getDb()('roles').where('nome', 'Aluno').first();
+  if (!role) {
+    throw new Error("Role 'Aluno' não encontrada.");
+  }
+  const busyStudentIds = await getDb()('matriculas')
+  .select('aluno_id')
+  .where('status', 'cursando');
+
+  return getDb()('usuarios')
+  .select('id', 'nome', 'funcional')
+  .where('role_id', role.id)
+  .whereNotIn('id', busyStudentIds.map(student => student.aluno_id))
+  .orderBy('nome', 'asc');
+}
+
 module.exports = {
   findByEmail,
   findByFuncional,
@@ -89,5 +105,6 @@ module.exports = {
   findAllProfessors,
   create,
   update,
-  remove
+  remove,
+  findAvailableStudents
 };

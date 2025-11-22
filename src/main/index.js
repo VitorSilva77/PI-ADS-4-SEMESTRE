@@ -9,6 +9,7 @@ const authController = require('./controllers/authController');
 const courseController = require('./controllers/courseController');
 const userController = require('./controllers/userController'); 
 const reportController = require('./controllers/reportController'); 
+const enrollmentController = require('./controllers/enrollmentController');
 
 function registerIpcHandlers() {
   // Autenticação
@@ -30,6 +31,12 @@ function registerIpcHandlers() {
   ipcMain.handle('users:update', userController.handleUpdateUser);    
   ipcMain.handle('users:delete', userController.handleDeleteUser);
   ipcMain.handle('users:get-professors', userController.handleGetAllProfessors);
+  ipcMain.handle('users:get-available-students', userController.handleGetAvailableStudents);
+  
+  // Matrículas
+  ipcMain.handle('enrollments:create', enrollmentController.handleCreateEnrollment);
+  ipcMain.handle('enrollments:get-by-course', enrollmentController.handleGetEnrollmentsByCourse);
+  ipcMain.handle('enrollments:update-grade', enrollmentController.handleUpdateEnrollmentGrade);
 
   // Relatórios 
   ipcMain.handle('reports:course-performance', reportController.handleGetCoursePerformance);

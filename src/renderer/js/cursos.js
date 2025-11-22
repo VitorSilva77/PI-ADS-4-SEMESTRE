@@ -225,7 +225,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!professorSelect && !editProfessorSelect) return;
 
         try {
-            // Chamada à nova função que busca apenas professores
             const response = await api.getAllProfessors(); 
             if (response.success) {
                 const professors = response.data;
@@ -250,7 +249,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     loadProfessors();
 
-    // Lógica para o formulário de criação de curso
     const newCourseForm = document.getElementById('newCourseForm');
     const formMessage = document.getElementById('formMessage');
 
@@ -275,7 +273,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 descricao: courseDescription,
                 carga_horaria: courseWorkload,
                 professor_id: professorId,
-                // Outros campos necessários, como imagem_path, podem ser adicionados aqui se necessário
+
             };
 
             try {
@@ -284,8 +282,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.success) {
                     formMessage.textContent = `Curso "${courseName}" criado com sucesso!`;
                     formMessage.style.color = 'green';
-                    newCourseForm.reset(); // Limpa o formulário
-                    loadCourses(); // Recarrega a lista de cursos
+                    newCourseForm.reset(); 
+                    loadCourses(); 
                 } else {
                     formMessage.textContent = response.error || 'Erro ao criar o curso.';
                     formMessage.style.color = 'red';
