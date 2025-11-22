@@ -8,18 +8,42 @@
   "scripts": {
     "start": "electron .",
     "dev": "electron . --inspect",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "electron-builder"
   },
   "dependencies": {
-    "xlsx":"^0.18.5",
+    "bcryptjs": "^3.0.3",
     "chart.js": "^3.9.1",
-    "mysql2": "^3.3.3",
-    "bcrypt": "^6.0.0",
     "dotenv": "^17.2.2",
     "knex": "^2.4.2",
-    "pg": "^8.7.1"
+    "mysql2": "^3.3.3",
+    "pg": "^8.7.1",
+    "xlsx": "^0.18.5"
+  },
+  "build": {
+    "appId": "com.profuturo.app",
+    "productName": "PróFuturo",
+    "directories": {
+      "output": "dist"
+    },
+    "icon": "build/teste1.png",
+    "win": {
+      "icon": "build/teste1.png",      
+      "target": ["nsis"]
+    },
+    "linux": {
+      "icon": "build/teste1.png",
+      "target": ["AppImage", "deb"],
+      "category": "Utility"
+    },
+    "mac": {
+      "icon": "build/teste1.png",      
+      "target": ["dmg"],
+      "category": "public.app-category.utilities"
+    }
   },
   "devDependencies": {
-    "electron": "^25.9.8"
+    "electron": "^39.2.2",
+    "electron-builder": "^26.0.12"
   }
 }
